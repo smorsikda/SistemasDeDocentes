@@ -104,6 +104,7 @@ CREATE TABLE students (
 
   final_grade DECIMAL(7,2) NULL,
   status ENUM('pendiente','aprobado','desaprobado') NOT NULL DEFAULT 'pendiente',
+  is_historical TINYINT(1) NOT NULL DEFAULT 0,
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -306,6 +307,7 @@ CREATE TABLE student_grades (
   exam4 DECIMAL(7,2) NULL,
   exam5 DECIMAL(7,2) NULL,
   final_grade DECIMAL(7,2) NULL,
+  status ENUM('pendiente','aprobado','desaprobado') NOT NULL DEFAULT 'pendiente',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
 

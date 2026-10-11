@@ -38,6 +38,8 @@ No se requiere Composer ni Node.js para ejecutar la aplicación actualmente.
 
 > **Importante:** `sql/schema1.sql` contiene instrucciones `DROP TABLE`. Al importarlo sobre una base existente se eliminan y recrean varias tablas. Haz una copia de seguridad antes de volver a importarlo si ya hay información que quieras conservar.
 
+Si ya tienes una base de datos de una versión anterior, no vuelvas a importar `schema1.sql`. Selecciona `docentes1_db` en phpMyAdmin e importa `sql/migrations/001_add_missing_student_columns.sql`; esta migración agrega las columnas faltantes sin borrar tablas ni registros.
+
 ### ¿Cuál archivo SQL debo usar?
 
 Usa `sql/schema1.sql` para esta versión: crea `docentes1_db` e incluye las tablas actuales de perfiles, escuelas, departamentos y auditoría. `sql/schema.sql` corresponde a un esquema anterior llamado `docentes_db`; no lo uses para una instalación nueva de esta versión.
