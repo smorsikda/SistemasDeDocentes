@@ -58,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       );
 
       $_SESSION['user']['must_change_password'] = 0;
+      $_SESSION['user']['auth_fingerprint'] = hash('sha256', $newHash);
+      session_regenerate_id(true);
 
       header("Location: dashboard.php");
       exit;

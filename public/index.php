@@ -105,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'name' => $user['name'],
                     'role' => $user['role'],
                     'must_change_password' => (int)($user['must_change_password'] ?? 0),
+                    'auth_fingerprint' => hash('sha256', (string)$user['password_hash']),
                 ];
 
                 // Registrar última actividad para control de inactividad
