@@ -23,10 +23,22 @@ function levelLabel($l){
 }
 
 $groupId = (int)($_GET['group_id'] ?? $_POST['group_id'] ?? 0);
-$date = trim((string)($_GET['date'] ?? date('Y-m-d')));
+$date = trim((string)($_POST['date'] ?? $_GET['date'] ?? date('Y-m-d')));
+$error = '';
+$saved = isset($_GET['saved']) && $_GET['saved'] == '1';
+
+function isValidAttendanceDate(string $date): bool {
+    if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $date, $matches)) return false;
+    return checkdate((int)$matches[2], (int)$matches[3], (int)$matches[1]);
+}
 
 if ($groupId <= 0) {
     exit('Grupo inválido');
+}
+
+if (!isValidAttendanceDate($date)) {
+    $error = 'La fecha seleccionada no es válida.';
+    $date = date('Y-m-d');
 }
 
 // =====================================================
@@ -51,10 +63,6 @@ if (($me['role'] ?? '') === 'teacher' && (int)$group['teacher_id'] !== (int)$me[
     exit('Acceso denegado');
 }
 
-if (($group['status'] ?? '') === 'finalizado') {
-    exit('Este grupo ya fue finalizado y no admite nuevas asistencias.');
-}
-
 // =====================================================
 // Traer estudiantes del grupo
 // =====================================================
@@ -71,103 +79,70 @@ $stmt = $pdo->prepare("
 $stmt->execute([$groupId]);
 $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// =====================================================
-// Buscar asistencia del día
-// =====================================================
-$stmt = $pdo->prepare("
-    SELECT *
-    FROM attendances
-    WHERE group_id = ? AND attendance_date = ?
-    LIMIT 1
-");
-$stmt->execute([$groupId, $date]);
-$attendance = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Si no existe, crearla
-if (!$attendance) {
-    $ins = $pdo->prepare("
-        INSERT INTO attendances (group_id, teacher_id, attendance_date)
-        VALUES (?, ?, ?)
-    ");
-    $ins->execute([$groupId, (int)$group['teacher_id'], $date]);
-
-    $attendanceId = (int)$pdo->lastInsertId();
-
-    $stmt = $pdo->prepare("
-        SELECT *
-        FROM attendances
-        WHERE id = ?
-        LIMIT 1
-    ");
-    $stmt->execute([$attendanceId]);
-    $attendance = $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-$attendanceId = (int)$attendance['id'];
-
-// =====================================================
-// Sincronizar attendance_items
-// =====================================================
-$stmt = $pdo->prepare("
-    SELECT student_id
-    FROM attendance_items
-    WHERE attendance_id = ?
-");
-$stmt->execute([$attendanceId]);
-$existingStudentIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
-$existingStudentIds = array_map('intval', $existingStudentIds);
-
-$insItem = $pdo->prepare("
-    INSERT INTO attendance_items (attendance_id, student_id, present)
-    VALUES (?, ?, 0)
-");
-
-foreach ($students as $s) {
-    $studentId = (int)$s['id'];
-    if (!in_array($studentId, $existingStudentIds, true)) {
-        $insItem->execute([$attendanceId, $studentId]);
-    }
-}
-
-// =====================================================
-// Guardar asistencia
-// =====================================================
+// Guardar asistencia únicamente por POST; una visita GET no crea registros.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  verify_csrf_or_die();
+    verify_csrf_or_die();
     $attendanceStatus = $_POST['attendance'] ?? [];
+    $validStudentIds = array_fill_keys(array_map(static fn($student) => (string)(int)$student['id'], $students), true);
 
-    $upd = $pdo->prepare("
-        UPDATE attendance_items
-        SET present = ?
-        WHERE attendance_id = ? AND student_id = ?
-    ");
-
-    foreach ($students as $s) {
-        $studentId = (int)$s['id'];
-        $present = isset($attendanceStatus[$studentId]) ? (int)$attendanceStatus[$studentId] : 0;
-        $upd->execute([$present, $attendanceId, $studentId]);
+    if ($error === '' && !is_array($attendanceStatus)) {
+        $error = 'Los datos de asistencia enviados no son válidos.';
+    }
+    if ($error === '' && array_diff(array_map('strval', array_keys($attendanceStatus)), array_keys($validStudentIds))) {
+        $error = 'La asistencia contiene estudiantes que no pertenecen a este grupo.';
+    }
+    if ($error === '') {
+        foreach ($students as $student) {
+            $studentId = (string)(int)$student['id'];
+            if (!array_key_exists($studentId, $attendanceStatus) || !in_array((string)$attendanceStatus[$studentId], ['0', '1'], true)) {
+                $error = 'Seleccioná presente o ausente para cada estudiante.';
+                break;
+            }
+        }
     }
 
-    header("Location: attendance.php?group_id={$groupId}&date={$date}&saved=1");
-    exit;
+    if ($error === '') {
+        try {
+            $pdo->beginTransaction();
+            $lockGroup = $pdo->prepare('SELECT status FROM groups_table WHERE id = ? FOR UPDATE');
+            $lockGroup->execute([$groupId]);
+            if ($lockGroup->fetchColumn() === 'finalizado') {
+                throw new RuntimeException('Este grupo ya fue finalizado y no admite nuevas asistencias.');
+            }
+
+            $insAttendance = $pdo->prepare('INSERT INTO attendances (group_id, teacher_id, attendance_date) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id)');
+            $insAttendance->execute([$groupId, (int)$group['teacher_id'], $date]);
+            $attendanceId = (int)$pdo->lastInsertId();
+
+            $insItem = $pdo->prepare('INSERT IGNORE INTO attendance_items (attendance_id, student_id, present) VALUES (?, ?, 0)');
+            $updateItem = $pdo->prepare('UPDATE attendance_items SET present = ? WHERE attendance_id = ? AND student_id = ?');
+            foreach ($students as $student) {
+                $studentId = (int)$student['id'];
+                $insItem->execute([$attendanceId, $studentId]);
+                $updateItem->execute([(int)$attendanceStatus[(string)$studentId], $attendanceId, $studentId]);
+            }
+            $pdo->commit();
+            header("Location: attendance.php?group_id={$groupId}&date=" . rawurlencode($date) . '&saved=1');
+            exit;
+        } catch (Throwable $e) {
+            if ($pdo->inTransaction()) $pdo->rollBack();
+            $error = $e instanceof RuntimeException ? $e->getMessage() : 'Ocurrió un error al guardar la asistencia.';
+        }
+    }
 }
 
-// =====================================================
-// Traer asistencia actual
-// =====================================================
-$stmt = $pdo->prepare("
-    SELECT ai.student_id, ai.present
-    FROM attendance_items ai
-    WHERE ai.attendance_id = ?
-");
-$stmt->execute([$attendanceId]);
-
+// Consultar registros existentes sin escribir en la base.
+$stmt = $pdo->prepare('SELECT id FROM attendances WHERE group_id = ? AND attendance_date = ? LIMIT 1');
+$stmt->execute([$groupId, $date]);
+$attendanceId = (int)($stmt->fetchColumn() ?: 0);
 $presentMap = [];
-while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $presentMap[(int)$row['student_id']] = (int)$row['present'];
+if ($attendanceId > 0) {
+    $stmt = $pdo->prepare('SELECT student_id, present FROM attendance_items WHERE attendance_id = ?');
+    $stmt->execute([$attendanceId]);
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $presentMap[(int)$row['student_id']] = (int)$row['present'];
+    }
 }
-
-$saved = isset($_GET['saved']) && $_GET['saved'] == '1';
 ?>
 <!doctype html>
 <html lang="es">
@@ -212,6 +187,7 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
     .save-btn:hover{filter:brightness(.98)}
     .empty{padding:24px;text-align:center;color:#6b7280;font-weight:600}
     .ok-msg{margin:0 24px 8px;padding:12px 14px;border-radius:12px;background:#ecfdf5;border:1px solid #bbf7d0;color:#166534;font-weight:700}
+    .error-msg{margin:0 24px 8px;padding:12px 14px;border-radius:12px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-weight:700}
     @media print{
       body{background:#fff}
       .no-print,.sidebar,#appSidebar{display:none !important}
@@ -256,9 +232,17 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
     <?php if ($saved): ?>
       <div class="ok-msg">Asistencia guardada correctamente.</div>
     <?php endif; ?>
+    <?php if ($error !== ''): ?>
+      <div class="error-msg"><?= h($error) ?></div>
+    <?php endif; ?>
+    <?php if (($group['status'] ?? '') === 'finalizado'): ?>
+      <div class="error-msg">Este grupo ya fue finalizado; la asistencia está en modo de solo lectura.</div>
+    <?php endif; ?>
 
     <form method="post">
       <?php echo csrf_input(); ?>
+      <input type="hidden" name="group_id" value="<?= $groupId ?>">
+      <input type="hidden" name="date" value="<?= h($date) ?>">
       <div class="table-wrap">
         <table>
           <thead>
@@ -284,12 +268,12 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
                   <td class="attendance-cell">
                     <div class="attendance-group">
                       <label class="attendance-option present">
-                        <input type="radio" name="attendance[<?= $studentId ?>]" value="1" <?= $isPresent === 1 ? 'checked' : '' ?>>
+                        <input type="radio" name="attendance[<?= $studentId ?>]" value="1" <?= $isPresent === 1 ? 'checked' : '' ?> <?= ($group['status'] ?? '') === 'finalizado' ? 'disabled' : '' ?>>
                         <span>✔ Presente</span>
                       </label>
 
                       <label class="attendance-option absent">
-                        <input type="radio" name="attendance[<?= $studentId ?>]" value="0" <?= $isPresent === 0 ? 'checked' : '' ?>>
+                        <input type="radio" name="attendance[<?= $studentId ?>]" value="0" <?= $isPresent === 0 ? 'checked' : '' ?> <?= ($group['status'] ?? '') === 'finalizado' ? 'disabled' : '' ?>>
                         <span>✘ Ausente</span>
                       </label>
                     </div>
@@ -311,7 +295,7 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
         </div>
 
         <div class="actions no-print">
-          <button class="save-btn" type="submit">Guardar asistencia</button>
+          <button class="save-btn" type="submit" <?= ($group['status'] ?? '') === 'finalizado' ? 'disabled' : '' ?>>Guardar asistencia</button>
           <button class="toolbar-btn print" type="button" onclick="window.print()">Imprimir / Exportar PDF</button>
           <a class="toolbar-btn back" href="groups.php">← Volver</a>
         </div>
