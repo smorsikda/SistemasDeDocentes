@@ -362,7 +362,7 @@ function statusClass($status){
       </div>
 
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btnS" href="students_export.php?<?= http_build_query($_GET) ?>">Descargar CSV</a>
+        <a class="btnS" href="students_export.php?<?= http_build_query(array_merge($_GET, ['historical' => 1])) ?>">Descargar CSV</a>
       </div>
     </div>
 
@@ -510,7 +510,7 @@ function statusClass($status){
                   <a class="btnG" href="student_profile.php?id=<?= (int)$r['id'] ?>">Ver</a>
                   <a class="btnG" href="student_letter.php?id=<?= (int)$r['id'] ?>" target="_blank">Constancia</a>
                   <?php if ((int)$r['is_historical'] === 1): ?>
-                    <form method="post" action="student_reactivate.php" onsubmit="return confirm('¿Rehabilitar este estudiante y devolverlo al año 2026?');" style="display:inline;">
+                    <form method="post" action="student_reactivate.php" onsubmit="return confirm('¿Devolver este estudiante al listado de estudiantes activos?');" style="display:inline;">
                       <?= csrf_input() ?>
                       <input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
                       <button class="btnG" type="submit">Rehabilitar</button>

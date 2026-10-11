@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../app/config/db.php';
 require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../app/helpers/csrf.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -110,6 +111,8 @@ LIMIT 800
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$archiveMessage = (string)($_GET['archive'] ?? '');
 
 function h($v){
   return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
@@ -257,6 +260,16 @@ function organizationTypeLabel($v){
       flex-wrap:wrap;
     }
 
+    .notice{
+      margin:12px 0 0;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid var(--line);
+    }
+
+    .notice.success{color:#b7f7d2;background:rgba(34,197,94,.12)}
+    .notice.error{color:#fecaca;background:rgba(239,68,68,.12)}
+
     .muted{
       color:var(--muted);
     }
@@ -321,11 +334,20 @@ function organizationTypeLabel($v){
             <div class="stat">Modo docente</div>
           <?php endif; ?>
         </div>
+        <?php if ($archiveMessage === 'done'): ?>
+          <p class="notice success" role="status">El estudiante se movió a Estudiantes históricos. Sus notas y asistencias se conservaron.</p>
+        <?php elseif ($archiveMessage === 'active_group'): ?>
+          <p class="notice error" role="alert">No se puede archivar: el estudiante todavía pertenece a un grupo activo. Finaliza o retira su asignación primero.</p>
+        <?php elseif ($archiveMessage === 'not_found'): ?>
+          <p class="notice error" role="alert">No se encontró el estudiante o ya estaba archivado.</p>
+        <?php elseif ($archiveMessage === 'failed'): ?>
+          <p class="notice error" role="alert">No se pudo archivar el estudiante. Inténtalo de nuevo.</p>
+        <?php endif; ?>
       </div>
 
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <a class="btnS" href="student_form.php">+ Agregar estudiante</a>
-        <a class="btnS" href="students_export.php?<?= http_build_query($_GET) ?>">Descargar CSV</a>
+        <a class="btnS" href="students_export.php?<?= http_build_query(array_merge($_GET, ['historical' => 0])) ?>">Descargar CSV</a>
       </div>
     </div>
 
@@ -412,7 +434,7 @@ function organizationTypeLabel($v){
             <th>Organización</th>
             <th class="nowrap">Teléfono</th>
             <?php if ($me['role']==='admin'): ?><th>Docente</th><?php endif; ?>
-            <th style="width:240px;">Acciones</th>
+            <th style="width:310px;">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -463,6 +485,13 @@ function organizationTypeLabel($v){
                   <a class="btnG" href="student_profile.php?id=<?= (int)$r['id'] ?>">Ver</a>
                   <a class="btnG" href="student_form.php?id=<?= (int)$r['id'] ?>">Editar</a>
                   <a class="btnG" href="student_letter.php?id=<?= (int)$r['id'] ?>" target="_blank">Constancia</a>
+                  <?php if (($me['role'] ?? '') === 'admin'): ?>
+                    <form method="post" action="student_archive.php" onsubmit="return confirm('¿Mover este estudiante a Estudiantes históricos? Se conservarán sus notas y asistencias.');" style="display:inline;">
+                      <?= csrf_input() ?>
+                      <input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
+                      <button class="btnD" type="submit">Archivar</button>
+                    </form>
+                  <?php endif; ?>
                 </div>
               </td>
             </tr>

@@ -16,8 +16,9 @@ $dept   = trim((string)($_GET['department'] ?? ''));
 $teacherId = (int)($_GET['teacher_id'] ?? 0);
 $municipality = trim((string)($_GET['municipality'] ?? ''));
 $organizationType = trim((string)($_GET['organization_type'] ?? ''));
+$historical = (($_GET['historical'] ?? '0') === '1');
 
-$where = [];
+$where = ['s.is_historical = ' . ($historical ? '1' : '0')];
 $params = [];
 
 if (($me['role'] ?? '') === 'teacher') {
