@@ -13,6 +13,12 @@ function h($v){
   return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 }
 
+function isValidOptionalDate(string $date): bool {
+  if ($date === '') return true;
+  if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $date, $matches)) return false;
+  return checkdate((int)$matches[2], (int)$matches[3], (int)$matches[1]);
+}
+
 $characterizationOptions = [
   'catador' => 'Catador',
   'barista' => 'Barista',
@@ -211,7 +217,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $municipality_id = (int)($munStmt->fetchColumn() ?: 0);
   }
 
-  $number_of_members = ($number_of_members_raw === '') ? null : (int)$number_of_members_raw;
+  $numberOfMembersValid = $number_of_members_raw === ''
+    || (preg_match('/^\d+$/', $number_of_members_raw) && (float)$number_of_members_raw <= 2147483647);
+  $number_of_members = ($number_of_members_raw === '' || !$numberOfMembersValid) ? null : (int)$number_of_members_raw;
 
   $teacher_id = (int)$row['teacher_id'];
   if (($me['role'] ?? '') === 'admin') {
@@ -222,14 +230,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $phoneDigits = preg_replace('/\D+/', '', $phone);
   $orgPhoneDigits = preg_replace('/\D+/', '', $organization_phone);
+  $schoolStmt = $pdo->prepare('SELECT COUNT(*) FROM schools WHERE id = ? AND is_active = 1');
+  $schoolStmt->execute([$school_id]);
+  $schoolIsActive = (int)$schoolStmt->fetchColumn() === 1;
+  $teacherStmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE id = ? AND role = 'teacher' AND is_active = 1");
+  $teacherStmt->execute([$teacher_id]);
+  $teacherIsActive = (int)$teacherStmt->fetchColumn() === 1;
 
   // =====================================================
   // Validaciones
   // =====================================================
   if ($full_name === '') {
     $error = "El nombre es obligatorio.";
-  } elseif ($school_id <= 0) {
+  } elseif ($school_id <= 0 || !$schoolIsActive) {
     $error = "Seleccioná una escuela válida.";
+  } elseif (!$teacherIsActive) {
+    $error = "Seleccioná un docente activo.";
+  } elseif (!isValidOptionalDate($enrolled_at)) {
+    $error = "La fecha de inscripción no es válida.";
   } elseif ($sex !== '' && !in_array($sex, ['masculino','femenino'], true)) {
     $error = "Sexo inválido.";
   } elseif ($education_level !== '' && !in_array($education_level, ['secundaria','tecnico','universitario'], true)) {
@@ -252,8 +270,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error = "Registro de marca inválido.";
   } elseif ($characterization !== '' && !array_key_exists($characterization, $characterizationOptions)) {
     $error = "Caracterización inválida.";
-  } elseif ($number_of_members !== null && $number_of_members < 0) {
-    $error = "El número de socios no puede ser negativo.";
+  } elseif (!$numberOfMembersValid) {
+    $error = "El número de socios debe ser un entero entre 0 y 2147483647.";
   } else {
     try {
       $pdo->beginTransaction();

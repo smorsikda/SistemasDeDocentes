@@ -13,6 +13,12 @@ function h($v){
   return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 }
 
+function isValidGroupDate(string $date): bool {
+  if ($date === '') return true;
+  if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $date, $matches)) return false;
+  return checkdate((int)$matches[2], (int)$matches[3], (int)$matches[1]);
+}
+
 $error = '';
 $success = '';
 
@@ -64,16 +70,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $location = trim($_POST['location'] ?? '');
   $notes = trim($_POST['notes'] ?? '');
 
+  $capacityIsValid = $capacity === ''
+    || (preg_match('/^\d+$/', $capacity) && (float)$capacity <= 2147483647 && (int)$capacity > 0);
+  $teacherStmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE id = ? AND role = 'teacher' AND is_active = 1");
+  $teacherStmt->execute([$teacher_id]);
+  $teacherIsActive = (int)$teacherStmt->fetchColumn() === 1;
+
   if ($name === '') {
     $error = 'El nombre del grupo es obligatorio.';
+  } elseif (mb_strlen($name, 'UTF-8') > 200) {
+    $error = 'El nombre del grupo no puede superar 200 caracteres.';
   } elseif (!in_array($course_type, ['barismo','catacion'], true)) {
     $error = 'Curso inválido.';
   } elseif (!in_array($course_level, ['basico','avanzado','intensivo'], true)) {
     $error = 'Nivel inválido.';
-  } elseif ($teacher_id <= 0) {
-    $error = 'Seleccioná un docente.';
-  } elseif ($capacity !== '' && (int)$capacity <= 0) {
-    $error = 'El cupo debe ser mayor a 0.';
+  } elseif ($teacher_id <= 0 || !$teacherIsActive) {
+    $error = 'Seleccioná un docente activo.';
+  } elseif (!$capacityIsValid) {
+    $error = 'El cupo debe ser un entero entre 1 y 2147483647.';
+  } elseif (!isValidGroupDate($start_date) || !isValidGroupDate($end_date)) {
+    $error = 'Ingresá fechas de calendario válidas.';
   } elseif ($start_date !== '' && $end_date !== '' && $end_date < $start_date) {
     $error = 'La fecha fin no puede ser menor que la fecha inicio.';
   } else {
