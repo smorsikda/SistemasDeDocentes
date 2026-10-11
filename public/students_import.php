@@ -432,6 +432,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'previ
 // IMPORT
 // =====================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'import') {
+    verify_csrf_or_die();
+
     $validRows = $_SESSION['students_import_valid_rows'] ?? [];
     $teacherId = (int)($_SESSION['students_import_teacher_id'] ?? 0);
 
