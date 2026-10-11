@@ -26,26 +26,10 @@ function h($v){
 
 function getClientIp(): string
 {
-    $keys = [
-        'HTTP_CF_CONNECTING_IP',
-        'HTTP_X_FORWARDED_FOR',
-        'REMOTE_ADDR'
-    ];
-
-    foreach ($keys as $key) {
-        if (!empty($_SERVER[$key])) {
-            $value = trim((string)$_SERVER[$key]);
-
-            if ($key === 'HTTP_X_FORWARDED_FOR') {
-                $parts = explode(',', $value);
-                return trim($parts[0]);
-            }
-
-            return $value;
-        }
-    }
-
-    return '0.0.0.0';
+    // Los encabezados X-Forwarded-For y CF-Connecting-IP son controlables
+    // por el cliente si no hay un proxy de confianza configurado.
+    $remoteAddress = trim((string)($_SERVER['REMOTE_ADDR'] ?? ''));
+    return filter_var($remoteAddress, FILTER_VALIDATE_IP) ? $remoteAddress : '0.0.0.0';
 }
 
 function logActivity(PDO $pdo, ?int $userId, string $action, string $description, string $ip): void
