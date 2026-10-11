@@ -90,17 +90,20 @@ function detectDelimiter($firstLine){
 }
 
 function readCsvRows($tmpPath){
-    $lines = file($tmpPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    if (!$lines || !isset($lines[0])) {
-        return [null, [], "El archivo CSV está vacío."];
-    }
-
-    $delimiter = detectDelimiter($lines[0]);
-
+    $maxRows = 5000;
     $fh = fopen($tmpPath, 'r');
     if (!$fh) {
         return [null, [], "No se pudo leer el archivo CSV."];
     }
+
+    $firstLine = fgets($fh);
+    if ($firstLine === false) {
+        fclose($fh);
+        return [null, [], "El archivo CSV está vacío."];
+    }
+
+    $delimiter = detectDelimiter($firstLine);
+    rewind($fh);
 
     $header = fgetcsv($fh, 0, $delimiter);
     if (!$header) {
@@ -115,6 +118,10 @@ function readCsvRows($tmpPath){
     $rows = [];
     while (($data = fgetcsv($fh, 0, $delimiter)) !== false) {
         if ($data === [null] || $data === false) continue;
+        if (count($rows) >= $maxRows) {
+            fclose($fh);
+            return [null, [], "El CSV supera el límite de {$maxRows} filas de datos."];
+        }
 
         while (count($data) < count($header)) {
             $data[] = '';
@@ -210,7 +217,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'previ
     }
 
     if (!isset($_FILES['csv']) || ($_FILES['csv']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-        $errors[] = 'Subí un archivo CSV válido.';
+        $uploadError = (int)($_FILES['csv']['error'] ?? UPLOAD_ERR_NO_FILE);
+        $errors[] = $uploadError === UPLOAD_ERR_INI_SIZE || $uploadError === UPLOAD_ERR_FORM_SIZE
+            ? 'El archivo excede el tamaño máximo permitido por PHP.'
+            : 'Subí un archivo CSV válido.';
+    } elseif ((int)($_FILES['csv']['size'] ?? 0) > 5 * 1024 * 1024) {
+        $errors[] = 'El CSV no puede superar 5 MB.';
     }
 
     if (!$errors) {
