@@ -1,14 +1,28 @@
 <?php
 require __DIR__ . '/../app/config/db.php';
 require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../app/helpers/csrf.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+  header('Allow: POST');
+  http_response_code(405);
+  exit('Método no permitido');
+}
+
+verify_csrf_or_die();
+
 $me = $_SESSION['user'];
 
-$id = (int)($_GET['id'] ?? 0);
-$to = trim($_GET['to'] ?? '');
+if (!in_array(($me['role'] ?? ''), ['admin', 'teacher'], true)) {
+  http_response_code(403);
+  exit('Acceso denegado');
+}
+
+$id = (int)($_POST['id'] ?? 0);
+$to = trim((string)($_POST['to'] ?? ''));
 
 if ($id <= 0 || !in_array($to, ['pendiente','aprobado','desaprobado'], true)) {
   http_response_code(400); exit("Bad request");

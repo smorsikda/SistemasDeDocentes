@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../app/config/db.php';
 require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../app/helpers/csrf.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -509,9 +510,11 @@ function statusClass($status){
                   <a class="btnG" href="student_profile.php?id=<?= (int)$r['id'] ?>">Ver</a>
                   <a class="btnG" href="student_letter.php?id=<?= (int)$r['id'] ?>" target="_blank">Constancia</a>
                   <?php if ((int)$r['is_historical'] === 1): ?>
-                    <a class="btnG" href="student_reactivate.php?id=<?= (int)$r['id'] ?>" onclick="return confirm('¿Rehabilitar este estudiante y devolverlo al año 2026?');">
-                      Rehabilitar
-                    </a>
+                    <form method="post" action="student_reactivate.php" onsubmit="return confirm('¿Rehabilitar este estudiante y devolverlo al año 2026?');" style="display:inline;">
+                      <?= csrf_input() ?>
+                      <input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
+                      <button class="btnG" type="submit">Rehabilitar</button>
+                    </form>
                   <?php endif; ?>
                 </div>
               </td>
