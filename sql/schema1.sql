@@ -378,7 +378,8 @@ CREATE TABLE login_attempts (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   INDEX idx_email (email),
-  INDEX idx_ip (ip_address)
+  INDEX idx_ip (ip_address),
+  INDEX idx_login_attempts_created_at (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -396,6 +397,8 @@ CREATE TABLE activity_logs (
 
   INDEX idx_user (user_id),
   INDEX idx_action (action),
+  INDEX idx_activity_created_at (created_at),
+  INDEX idx_activity_certificate_ip_time (action, ip_address, created_at),
 
   CONSTRAINT fk_logs_user
     FOREIGN KEY (user_id) REFERENCES users(id)

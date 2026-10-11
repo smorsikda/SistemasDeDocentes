@@ -40,6 +40,10 @@ No se requiere Composer ni Node.js para ejecutar la aplicación actualmente.
 
 Si ya tienes una base de datos de una versión anterior, no vuelvas a importar `schema1.sql`. Selecciona `docentes1_db` en phpMyAdmin e importa `sql/migrations/001_add_missing_student_columns.sql`; esta migración agrega las columnas faltantes sin borrar tablas ni registros.
 
+Para bases de datos existentes, también puedes importar `sql/migrations/002_add_audit_log_indexes.sql`. Agrega índices para que las consultas del historial y del límite de certificados sigan respondiendo bien cuando crezcan los registros; no borra ni modifica información.
+
+Los registros de auditoría se conservan sin borrado automático. Antes de programar una limpieza, la institución debe definir el plazo de conservación y respaldar la base.
+
 ### ¿Cuál archivo SQL debo usar?
 
 Usa `sql/schema1.sql` para esta versión: crea `docentes1_db` e incluye las tablas actuales de perfiles, escuelas, departamentos y auditoría. `sql/schema.sql` corresponde a un esquema anterior llamado `docentes_db`; no lo uses para una instalación nueva de esta versión.

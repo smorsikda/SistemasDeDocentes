@@ -31,12 +31,12 @@ if ($action !== '') {
 }
 
 if ($dateFrom !== '') {
-    $where[] = "DATE(al.created_at) >= ?";
-    $params[] = $dateFrom;
+    $where[] = "al.created_at >= ?";
+    $params[] = $dateFrom . ' 00:00:00';
 }
 
 if ($dateTo !== '') {
-    $where[] = "DATE(al.created_at) <= ?";
+    $where[] = "al.created_at < DATE_ADD(?, INTERVAL 1 DAY)";
     $params[] = $dateTo;
 }
 
@@ -75,7 +75,8 @@ $totalLogs = count($rows);
 $todayCountStmt = $pdo->query("
     SELECT COUNT(*)
     FROM activity_logs
-    WHERE DATE(created_at) = CURDATE()
+    WHERE created_at >= CURDATE()
+      AND created_at < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
 ");
 $todayCount = (int)$todayCountStmt->fetchColumn();
 
