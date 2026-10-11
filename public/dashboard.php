@@ -780,7 +780,7 @@ new Chart(document.getElementById('levelChart'), {
 new Chart(document.getElementById('deptChart'), {
   type: 'bar',
   data: {
-    labels: <?= json_encode($deptLabels, JSON_UNESCAPED_UNICODE) ?>,
+    labels: <?= json_encode($deptLabels, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
     datasets: [{
       data: <?= json_encode($deptTotals, JSON_UNESCAPED_UNICODE) ?>,
       backgroundColor: <?= json_encode($deptTotals) ?>.map((_, i) => colors[i % colors.length]),
@@ -811,7 +811,7 @@ new Chart(document.getElementById('deptChart'), {
 new Chart(document.getElementById('organizationChart'), {
   type: 'bar',
   data: {
-    labels: <?= json_encode($orgLabels, JSON_UNESCAPED_UNICODE) ?>,
+    labels: <?= json_encode($orgLabels, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
     datasets: [{
       data: <?= json_encode($orgTotals, JSON_UNESCAPED_UNICODE) ?>,
       backgroundColor: <?= json_encode($orgTotals) ?>.map((_, i) => colors[i % colors.length]),
@@ -842,7 +842,7 @@ new Chart(document.getElementById('organizationChart'), {
 new Chart(document.getElementById('characterizationChart'), {
   type: 'bar',
   data: {
-    labels: <?= json_encode($charLabels, JSON_UNESCAPED_UNICODE) ?>,
+    labels: <?= json_encode($charLabels, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
     datasets: [{
       data: <?= json_encode($charTotals, JSON_UNESCAPED_UNICODE) ?>,
       backgroundColor: <?= json_encode($charTotals) ?>.map((_, i) => colors[i % colors.length]),

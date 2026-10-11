@@ -150,6 +150,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
+        // Bloquea el grupo mientras se validan cupos y cambios de matrícula.
+        $lockedGroupStmt = $pdo->prepare("SELECT capacity, status FROM groups_table WHERE id = ? FOR UPDATE");
+        $lockedGroupStmt->execute([$groupId]);
+        $lockedGroup = $lockedGroupStmt->fetch(PDO::FETCH_ASSOC);
+        if (!$lockedGroup || $lockedGroup['status'] === 'finalizado') {
+            throw new RuntimeException('Este grupo ya no admite cambios.');
+        }
+
+        $capacity = $lockedGroup['capacity'] !== null ? (int)$lockedGroup['capacity'] : null;
+        if ($capacity !== null && count($studentIds) > $capacity) {
+            throw new RuntimeException("El grupo admite como máximo {$capacity} estudiantes.");
+        }
+
         if (!empty($studentIds)) {
             $placeholders = implode(',', array_fill(0, count($studentIds), '?'));
 
@@ -174,6 +187,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($validIds !== $submittedIds) {
                 throw new RuntimeException('Se intentó inscribir uno o más estudiantes no permitidos para este grupo.');
             }
+
+            // Serializa asignaciones concurrentes del mismo estudiante a grupos activos.
+            $studentLockStmt = $pdo->prepare("SELECT id FROM students WHERE id IN ($placeholders) ORDER BY id FOR UPDATE");
+            $studentLockStmt->execute($studentIds);
+            $studentLockStmt->fetchAll(PDO::FETCH_COLUMN);
         }
 
         if (!empty($studentIds)) {
@@ -216,13 +234,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        $del = $pdo->prepare("DELETE FROM group_students WHERE group_id = ?");
-        $del->execute([$groupId]);
+        $existingStmt = $pdo->prepare("SELECT student_id FROM group_students WHERE group_id = ? FOR UPDATE");
+        $existingStmt->execute([$groupId]);
+        $existingIds = array_map('intval', $existingStmt->fetchAll(PDO::FETCH_COLUMN));
+        $removedIds = array_values(array_diff($existingIds, $studentIds));
+
+        if ($removedIds) {
+            $removedPlaceholders = implode(',', array_fill(0, count($removedIds), '?'));
+            $historySql = "
+                SELECT gs.student_id
+                FROM group_students gs
+                WHERE gs.group_id = ?
+                  AND gs.student_id IN ($removedPlaceholders)
+                  AND (
+                    EXISTS (
+                      SELECT 1 FROM student_grades sg
+                      WHERE sg.group_id = gs.group_id AND sg.student_id = gs.student_id
+                    )
+                    OR EXISTS (
+                      SELECT 1
+                      FROM attendance_items ai
+                      JOIN attendances a ON a.id = ai.attendance_id
+                      WHERE a.group_id = gs.group_id AND ai.student_id = gs.student_id
+                    )
+                  )
+                LIMIT 1
+            ";
+            $historyStmt = $pdo->prepare($historySql);
+            $historyStmt->execute(array_merge([$groupId], $removedIds));
+            if ($historyStmt->fetchColumn()) {
+                throw new RuntimeException('No se puede quitar a un estudiante que ya tiene notas o asistencias registradas en este grupo.');
+            }
+
+            $deleteSql = "DELETE FROM group_students WHERE group_id = ? AND student_id IN ($removedPlaceholders)";
+            $deleteStmt = $pdo->prepare($deleteSql);
+            $deleteStmt->execute(array_merge([$groupId], $removedIds));
+        }
 
         if (!empty($studentIds)) {
+            $newIds = array_values(array_diff($studentIds, $existingIds));
             $ins = $pdo->prepare("INSERT INTO group_students (group_id, student_id) VALUES (?, ?)");
 
-            foreach ($studentIds as $studentId) {
+            foreach ($newIds as $studentId) {
                 $ins->execute([$groupId, $studentId]);
             }
         }
@@ -245,7 +298,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
         }
-        $error = $e->getMessage() ?: 'Ocurrió un error al guardar los estudiantes del grupo.';
+        if (get_class($e) === RuntimeException::class) {
+            $error = $e->getMessage();
+        } else {
+            error_log('Group enrollment update failed: ' . $e->getMessage());
+            $error = 'Ocurrió un error al guardar los estudiantes del grupo.';
+        }
     }
 }
 
@@ -787,12 +845,10 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
                         <?php else: ?>
                           <button
                             type="button"
-                            class="mini-btn"
-                            onclick='addStudent(
-                              <?= (int)$s['id'] ?>,
-                              <?= json_encode((string)$s['full_name'], JSON_UNESCAPED_UNICODE) ?>,
-                              <?= json_encode((string)($s['student_code'] ?: '—'), JSON_UNESCAPED_UNICODE) ?>
-                            )'
+                            class="mini-btn js-add-student"
+                            data-student-id="<?= (int)$s['id'] ?>"
+                            data-student-name="<?= h($s['full_name']) ?>"
+                            data-student-code="<?= h($s['student_code'] ?: '—') ?>"
                           >
                             <?= $alreadyAssigned ? 'Inscrito' : 'Inscribir' ?>
                           </button>
@@ -922,10 +978,16 @@ function clearPreview() {
 
 <?php foreach ($assignedStudents as $a): ?>
 selectedStudents.set(<?= (int)$a['id'] ?>, {
-  name: <?= json_encode((string)$a['full_name'], JSON_UNESCAPED_UNICODE) ?>,
-  code: <?= json_encode((string)($a['student_code'] ?: '—'), JSON_UNESCAPED_UNICODE) ?>
+  name: <?= json_encode((string)$a['full_name'], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+  code: <?= json_encode((string)($a['student_code'] ?: '—'), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
 });
 <?php endforeach; ?>
+
+document.querySelectorAll('.js-add-student').forEach((button) => {
+  button.addEventListener('click', () => {
+    addStudent(button.dataset.studentId, button.dataset.studentName, button.dataset.studentCode);
+  });
+});
 
 renderPreview();
 

@@ -236,6 +236,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $teacherStmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE id = ? AND role = 'teacher' AND is_active = 1");
   $teacherStmt->execute([$teacher_id]);
   $teacherIsActive = (int)$teacherStmt->fetchColumn() === 1;
+  $cedulaAlreadyUsed = false;
+  if ($cedula !== '' && preg_match('/^\d{13}[A-Z]$/', $cedula)) {
+    $cedulaStmt = $pdo->prepare("SELECT id FROM students WHERE cedula = ? AND id <> ? LIMIT 1");
+    $cedulaStmt->execute([$cedula, $id]);
+    $cedulaAlreadyUsed = (bool)$cedulaStmt->fetchColumn();
+  }
 
   // =====================================================
   // Validaciones
@@ -260,6 +266,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error = "El teléfono debe tener exactamente 8 dígitos.";
   } elseif ($cedula !== '' && !preg_match('/^\d{13}[A-Z]$/', $cedula)) {
     $error = "La cédula debe tener exactamente 13 números y 1 letra.";
+  } elseif ($cedulaAlreadyUsed) {
+    $error = "La cédula ya está registrada para otro estudiante.";
   } elseif ($department_id > 0 && $municipality_name !== '' && $municipality_id <= 0) {
     $error = "El municipio no pertenece al departamento seleccionado.";
   } elseif ($organization_phone !== '' && strlen($orgPhoneDigits) !== 8) {
@@ -815,7 +823,7 @@ function toggleSidebar() {
   }
 }
 
-const municipiosPorDepartamento = <?= json_encode($municipios, JSON_UNESCAPED_UNICODE) ?>;
+const municipiosPorDepartamento = <?= json_encode($municipios, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 
 function loadMunicipalities() {
   const depSelect = document.getElementById('departmentSelect');
