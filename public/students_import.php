@@ -7,10 +7,6 @@ require __DIR__ . '/../app/helpers/csrf.php';
 requireLogin();
 requirePasswordChangeIfNeeded();
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 $me = $_SESSION['user'] ?? null;
 
 if (($me['role'] ?? '') !== 'admin') {
@@ -53,7 +49,7 @@ function normalizeGrade($value){
     if (!is_numeric($value)) return false;
 
     $num = (float)$value;
-    if ($num < 0) $num = 0;
+    if ($num < 0 || $num > 100) return false;
 
     return round($num, 2);
 }
@@ -69,7 +65,11 @@ function normalizeDateInput($value){
 
     // acepta YYYY-MM-DD
     if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
-        return $value;
+        [$y, $m, $d] = explode('-', $value);
+        if (checkdate((int)$m, (int)$d, (int)$y)) {
+            return $value;
+        }
+        return false;
     }
 
     // acepta DD/MM/YYYY
