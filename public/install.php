@@ -35,21 +35,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (strlen($password) < 8) {
         $error = 'La contraseña debe tener al menos 8 caracteres.';
     } else {
-        $check = $pdo->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
-        $check->execute([$email]);
+        // Un bloqueo de MySQL evita que dos solicitudes iniciales creen dos administradores.
+        $lock = $pdo->query("SELECT GET_LOCK('docentes_initial_admin_setup', 10)");
+        $lockAcquired = (int)$lock->fetchColumn() === 1;
 
-        if ($check->fetch()) {
-            $error = 'Ese correo ya existe.';
+        if (!$lockAcquired) {
+            $error = 'No se pudo iniciar la configuración. Intenta de nuevo.';
         } else {
-            $hash = password_hash($password, PASSWORD_DEFAULT);
+            try {
+                $adminCount = (int)$pdo->query("SELECT COUNT(*) FROM users WHERE role = 'admin'")->fetchColumn();
+                if ($adminCount > 0) {
+                    $error = 'La configuración inicial ya se completó. Inicia sesión.';
+                } else {
+                    $check = $pdo->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+                    $check->execute([$email]);
 
-            $ins = $pdo->prepare("
-                INSERT INTO users (name, email, password_hash, role, is_active, must_change_password)
-                VALUES (?, ?, ?, 'admin', 1, 0)
-            ");
-            $ins->execute([$name, $email, $hash]);
+                    if ($check->fetch()) {
+                        $error = 'Ese correo ya existe.';
+                    } else {
+                        $hash = password_hash($password, PASSWORD_DEFAULT);
 
-            $success = 'Administrador creado correctamente. Ya podés iniciar sesión.';
+                        $ins = $pdo->prepare("
+                            INSERT INTO users (name, email, password_hash, role, is_active, must_change_password)
+                            VALUES (?, ?, ?, 'admin', 1, 0)
+                        ");
+                        $ins->execute([$name, $email, $hash]);
+
+                        $success = 'Administrador creado correctamente. Ya podés iniciar sesión.';
+                    }
+                }
+            } finally {
+                $pdo->query("SELECT RELEASE_LOCK('docentes_initial_admin_setup')");
+            }
         }
     }
 }
