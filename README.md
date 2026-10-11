@@ -32,7 +32,7 @@ No se requiere Composer ni Node.js para ejecutar la aplicación actualmente.
 1. Inicia Apache y MySQL desde XAMPP.
 2. Abre phpMyAdmin, normalmente en `http://localhost/phpmyadmin/`.
 3. Importa `sql/schema1.sql`. El script crea la base `docentes1_db` y sus tablas.
-4. En `app/config/db.php`, verifica host, base de datos, usuario, contraseña y puerto. Para una instalación XAMPP que escucha en `3307`, el DSN debe incluir `port=3307`; para el puerto habitual `3306`, cambia ese valor según corresponda.
+4. Copia `app/config/db.local.example.php` como `app/config/db.local.php` y ajusta host, base de datos, usuario, contraseña y puerto para tu equipo. Este archivo local está excluido de Git. El ejemplo usa `3307`; si MariaDB escucha en `3306`, cambia el puerto en tu copia local.
 5. Abre `http://localhost/docentes/public/`.
 6. Si la base todavía no tiene administrador, la aplicación mostrará el formulario para crear el primero. Después podrás iniciar sesión con ese usuario.
 
@@ -71,7 +71,7 @@ fix: validar token CSRF al importar estudiantes
 feat: agregar filtro por escuela
 ```
 
-No incluyas contraseñas, datos personales reales ni ajustes locales de XAMPP en los commits. Antes de subir, verifica que `origin` apunte al repositorio propio:
+No incluyas contraseñas, datos personales reales ni ajustes locales de XAMPP en los commits. La página de diagnóstico `public/test_db.php` se retiró para no exponer detalles de conexión. Antes de subir, verifica que `origin` apunte al repositorio propio:
 
 ```powershell
 git remote -v
