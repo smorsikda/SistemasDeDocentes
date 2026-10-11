@@ -240,6 +240,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'previ
             if (!$errors) {
                 $preparedValidRows = [];
                 $rowNumber = 1;
+                $seenCedulas = [];
+                $existingCedulaStmt = $pdo->prepare("SELECT id FROM students WHERE cedula = ? LIMIT 1");
 
                 foreach ($csvRows as $raw) {
                     $rowNumber++;
@@ -259,6 +261,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'previ
                     $phone = normalizePhone($raw['phone'] ?? '');
                     $cedula = normalizeCedula($raw['cedula'] ?? '');
 
+                    if ($cedula !== null) {
+                        if (isset($seenCedulas[$cedula])) {
+                            $rowErrors[] = 'Cédula duplicada dentro del archivo';
+                        } else {
+                            $seenCedulas[$cedula] = true;
+                        }
+
+                        $existingCedulaStmt->execute([$cedula]);
+                        if ($existingCedulaStmt->fetchColumn()) {
+                            $rowErrors[] = 'La cédula ya está registrada en el sistema';
+                        }
+                    }
+
                     $departmentName = normalizeText($raw['department'] ?? '');
                     $municipalityName = normalizeText($raw['municipality'] ?? '');
                     $community = normalizeText($raw['community'] ?? '');
@@ -273,12 +288,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'previ
                     $number_of_members_raw = trim((string)($raw['number_of_members'] ?? ''));
                     $number_of_members = null;
                     if ($number_of_members_raw !== '') {
-                        if (!is_numeric($number_of_members_raw)) {
+                        if (!preg_match('/^\d+$/D', $number_of_members_raw)) {
                             $rowErrors[] = 'Número de socios inválido';
                         } else {
-                            $number_of_members = (int)$number_of_members_raw;
-                            if ($number_of_members < 0) {
-                                $rowErrors[] = 'Número de socios negativo';
+                            $normalizedMembers = ltrim($number_of_members_raw, '0');
+                            $normalizedMembers = $normalizedMembers === '' ? '0' : $normalizedMembers;
+                            if (strlen($normalizedMembers) > 10 || (strlen($normalizedMembers) === 10 && strcmp($normalizedMembers, '2147483647') > 0)) {
+                                $rowErrors[] = 'Número de socios fuera de rango';
+                            } else {
+                                $number_of_members = (int)$normalizedMembers;
                             }
                         }
                     }
