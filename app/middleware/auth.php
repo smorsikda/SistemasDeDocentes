@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once __DIR__ . '/../helpers/session.php';
+start_app_session();
 
 // ============================
 // CONFIGURACIÓN DE INACTIVIDAD

@@ -298,10 +298,13 @@ function isActive($file, $current) {
           <span class="nav-label">Guía</span>
         </a>
 
-        <a class="side-link" href="logout.php">
-          <span class="nav-icon">🚪</span>
-          <span class="nav-label">Salir</span>
-        </a>
+        <form method="post" action="logout.php" style="margin:0;">
+          <?= csrf_input() ?>
+          <button class="side-link" type="submit" style="width:100%;border:0;text-align:left;cursor:pointer;font:inherit;color:inherit;">
+            <span class="nav-icon">🚪</span>
+            <span class="nav-label">Salir</span>
+          </button>
+        </form>
       </nav>
     </div>
 

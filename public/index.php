@@ -244,7 +244,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <div class="footer-links">
         <span class="small">©️ <?= date('Y') ?> CONATRADEC</span>
-        <a class="small" href="logout.php">Limpiar sesión</a>
+        <form method="post" action="logout.php" style="display:inline;">
+          <?= csrf_input() ?>
+          <button class="small" type="submit" style="border:0;background:none;padding:0;color:inherit;cursor:pointer;">Limpiar sesión</button>
+        </form>
       </div>
     </div>
   </div>
