@@ -1,17 +1,28 @@
 <?php
+require __DIR__ . '/../app/helpers/session.php';
+start_app_session();
 require __DIR__ . '/../app/config/db.php';
+
+header('Cache-Control: no-store, private');
+header('Referrer-Policy: no-referrer');
 
 function h($v){
   return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 }
 
-$studentId = (int)($_GET['student_id'] ?? 0);
-$groupId = (int)($_GET['group_id'] ?? 0);
-
-if ($studentId <= 0 || $groupId <= 0) {
-  http_response_code(400);
-  exit('Faltan parámetros del certificado.');
+$token = (string)($_GET['token'] ?? '');
+$grant = null;
+if (preg_match('/^[a-f0-9]{64}$/', $token)) {
+  $grant = $_SESSION['certificate_downloads'][hash('sha256', $token)] ?? null;
 }
+
+if (!$grant || (int)($grant['expires_at'] ?? 0) < time()) {
+  http_response_code(403);
+  exit('El enlace del certificado no es válido o expiró. Realiza una nueva consulta.');
+}
+
+$studentId = (int)$grant['student_id'];
+$groupId = (int)$grant['group_id'];
 
 $stmt = $pdo->prepare("
   SELECT
@@ -68,7 +79,7 @@ function levelLabel($l){
   return 'Básico';
 }
 
-$certificateNumber = 'CERT-' . date('Y') . '-' . str_pad((string)$student['student_id'] ?? (string)$student['id'], 5, '0', STR_PAD_LEFT) . '-' . str_pad((string)$groupId, 4, '0', STR_PAD_LEFT);
+$certificateNumber = 'CERT-' . date('Y') . '-' . str_pad((string)$student['id'], 5, '0', STR_PAD_LEFT) . '-' . str_pad((string)$groupId, 4, '0', STR_PAD_LEFT);
 
 $logoGob = '/docentes/assets/images/grun.png';
 $logoSnpcc = '/docentes/assets/images/SNPCC.png';

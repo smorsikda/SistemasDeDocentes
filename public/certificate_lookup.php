@@ -1,5 +1,10 @@
 <?php
+require __DIR__ . '/../app/helpers/session.php';
+start_app_session();
 require __DIR__ . '/../app/config/db.php';
+
+header('Cache-Control: no-store, private');
+header('Referrer-Policy: no-referrer');
 
 function h($v){
   return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
@@ -8,61 +13,122 @@ function h($v){
 $error = '';
 $student = null;
 $certificates = [];
+$downloadTokens = [];
+
+// La consulta es pública; limita intentos por sesión para frenar enumeración básica.
+$now = time();
+$attempts = $_SESSION['certificate_lookup_attempts'] ?? ['started_at' => $now, 'count' => 0];
+if (($now - (int)($attempts['started_at'] ?? 0)) >= 900) {
+  $attempts = ['started_at' => $now, 'count' => 0];
+}
+
+if (isset($_SESSION['certificate_downloads']) && is_array($_SESSION['certificate_downloads'])) {
+  foreach ($_SESSION['certificate_downloads'] as $key => $grant) {
+    if ((int)($grant['expires_at'] ?? 0) < $now) {
+      unset($_SESSION['certificate_downloads'][$key]);
+    }
+  }
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $code = trim((string)($_POST['student_code'] ?? ''));
 
   if ($code === '') {
     $error = 'Ingresá tu código de estudiante.';
+  } elseif ((int)$attempts['count'] >= 10) {
+    http_response_code(429);
+    header('Retry-After: 900');
+    $error = 'Se alcanzó el límite de consultas. Intenta de nuevo en unos minutos.';
   } else {
-    $stmt = $pdo->prepare("
-      SELECT
-        s.id,
-        s.full_name,
-        s.student_code,
-        sc.name AS school_name
-      FROM students s
-      LEFT JOIN schools sc ON sc.id = s.school_id
-      WHERE s.student_code = ?
-      LIMIT 1
-    ");
-    $stmt->execute([$code]);
-    $student = $stmt->fetch(PDO::FETCH_ASSOC);
+    // El límite por IP persiste aunque el visitante borre o cambie su cookie.
+    // Se usa REMOTE_ADDR directamente; no se confía en cabeceras de proxy no configuradas.
+    $clientIp = filter_var($_SERVER['REMOTE_ADDR'] ?? '', FILTER_VALIDATE_IP);
+    $ipLimitReached = false;
+    if ($clientIp !== false) {
+      $rateStmt = $pdo->prepare("
+        SELECT COUNT(*)
+        FROM activity_logs
+        WHERE action = 'certificate_lookup'
+          AND ip_address = ?
+          AND created_at >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)
+      ");
+      $rateStmt->execute([$clientIp]);
+      $ipLimitReached = (int)$rateStmt->fetchColumn() >= 20;
+    }
 
-    if (!$student) {
-      $error = 'No se encontró un estudiante con ese código.';
+    if ($ipLimitReached) {
+      http_response_code(429);
+      header('Retry-After: 900');
+      $error = 'Se alcanzó el límite de consultas desde esta conexión. Intenta de nuevo en unos minutos.';
     } else {
+      $attempts['count'] = (int)$attempts['count'] + 1;
+      $logStmt = $pdo->prepare("
+        INSERT INTO activity_logs (user_id, action, description, ip_address)
+        VALUES (NULL, 'certificate_lookup', 'Consulta pública de certificado', ?)
+      ");
+      $logStmt->execute([$clientIp ?: null]);
+
       $stmt = $pdo->prepare("
         SELECT
-          g.id AS group_id,
-          g.group_code,
-          g.name AS group_name,
-          g.course_type,
-          g.course_level,
-          g.start_date,
-          g.end_date,
-          sg.final_grade,
-          sg.status AS academic_status
-        FROM group_students gs
-        JOIN groups_table g
-          ON g.id = gs.group_id
-        JOIN student_grades sg
-          ON sg.group_id = gs.group_id
-         AND sg.student_id = gs.student_id
-        WHERE gs.student_id = ?
-          AND sg.status = 'aprobado'
-          AND sg.final_grade >= 60
-        ORDER BY g.created_at DESC, g.id DESC
+          s.id,
+          s.full_name,
+          s.student_code,
+          sc.name AS school_name
+        FROM students s
+        LEFT JOIN schools sc ON sc.id = s.school_id
+        WHERE s.student_code = ?
+        LIMIT 1
       ");
-      $stmt->execute([(int)$student['id']]);
-      $certificates = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      $stmt->execute([$code]);
+      $student = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      if (!$certificates) {
-        $error = 'Tu certificado aún no está disponible. Consultá con tu docente o administración.';
-        $student = null;
+      if (!$student) {
+        $error = 'No se encontró un estudiante con ese código.';
+      } else {
+        $stmt = $pdo->prepare("
+          SELECT
+            g.id AS group_id,
+            g.group_code,
+            g.name AS group_name,
+            g.course_type,
+            g.course_level,
+            g.start_date,
+            g.end_date,
+            sg.final_grade,
+            sg.status AS academic_status
+          FROM group_students gs
+          JOIN groups_table g
+            ON g.id = gs.group_id
+          JOIN student_grades sg
+            ON sg.group_id = gs.group_id
+           AND sg.student_id = gs.student_id
+          WHERE gs.student_id = ?
+            AND sg.status = 'aprobado'
+            AND sg.final_grade >= 60
+          ORDER BY g.created_at DESC, g.id DESC
+        ");
+        $stmt->execute([(int)$student['id']]);
+        $certificates = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$certificates) {
+          $error = 'Tu certificado aún no está disponible. Consultá con tu docente o administración.';
+          $student = null;
+        } else {
+          foreach ($certificates as $certificate) {
+            $token = bin2hex(random_bytes(32));
+            $_SESSION['certificate_downloads'][hash('sha256', $token)] = [
+              'student_id' => (int)$student['id'],
+              'group_id' => (int)$certificate['group_id'],
+              'expires_at' => $now + 900,
+            ];
+            $downloadTokens[(int)$certificate['group_id']] = $token;
+          }
+        }
       }
     }
   }
+
+  $_SESSION['certificate_lookup_attempts'] = $attempts;
 }
 
 function courseLabel($t){
@@ -276,7 +342,7 @@ function levelLabel($l){
               <p><b>Nota final:</b> <?= h($c['final_grade']) ?></p>
               <p><b>Fechas:</b> <?= h($c['start_date'] ?: '—') ?> a <?= h($c['end_date'] ?: '—') ?></p>
 
-              <a class="download" href="certificate_download.php?student_id=<?= (int)$student['id'] ?>&group_id=<?= (int)$c['group_id'] ?>">
+              <a class="download" href="certificate_download.php?token=<?= h($downloadTokens[(int)$c['group_id']] ?? '') ?>">
                 Descargar certificado
               </a>
             </div>
