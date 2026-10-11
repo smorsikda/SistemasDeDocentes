@@ -31,10 +31,12 @@ if (isset($_SESSION['certificate_downloads']) && is_array($_SESSION['certificate
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $code = trim((string)($_POST['student_code'] ?? ''));
+  $code = strtoupper(trim((string)($_POST['student_code'] ?? '')));
 
   if ($code === '') {
     $error = 'Ingresá tu código de estudiante.';
+  } elseif (!preg_match('/^EST-\d{4}-\d{4,10}$/D', $code)) {
+    $error = 'No se encontró un certificado disponible para los datos ingresados.';
   } elseif ((int)$attempts['count'] >= 10) {
     http_response_code(429);
     header('Retry-After: 900');
@@ -83,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $student = $stmt->fetch(PDO::FETCH_ASSOC);
 
       if (!$student) {
-        $error = 'No se encontró un estudiante con ese código.';
+        $error = 'No se encontró un certificado disponible para los datos ingresados.';
       } else {
         $stmt = $pdo->prepare("
           SELECT
@@ -93,9 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             g.course_type,
             g.course_level,
             g.start_date,
-            g.end_date,
-            sg.final_grade,
-            sg.status AS academic_status
+            g.end_date
           FROM group_students gs
           JOIN groups_table g
             ON g.id = gs.group_id
@@ -111,7 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $certificates = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (!$certificates) {
-          $error = 'Tu certificado aún no está disponible. Consultá con tu docente o administración.';
+          // No revelar si el código existe pero todavía no tiene certificados.
+          $error = 'No se encontró un certificado disponible para los datos ingresados.';
           $student = null;
         } else {
           foreach ($certificates as $certificate) {
@@ -339,7 +340,6 @@ function levelLabel($l){
             <div class="cert-item">
               <p><b>Grupo:</b> <?= h($c['group_code']) ?> • <?= h($c['group_name']) ?></p>
               <p><b>Curso:</b> <?= h(courseLabel($c['course_type'])) ?> / <?= h(levelLabel($c['course_level'])) ?></p>
-              <p><b>Nota final:</b> <?= h($c['final_grade']) ?></p>
               <p><b>Fechas:</b> <?= h($c['start_date'] ?: '—') ?> a <?= h($c['end_date'] ?: '—') ?></p>
 
               <a class="download" href="certificate_download.php?token=<?= h($downloadTokens[(int)$c['group_id']] ?? '') ?>">
