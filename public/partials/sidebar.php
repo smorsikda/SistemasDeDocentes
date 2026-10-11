@@ -30,6 +30,22 @@ function isActive($file, $current) {
     width:84px;
   }
 
+  .sidebar.collapsed .sidebar-top{
+    flex-direction:column;
+    justify-content:center;
+    gap:10px;
+  }
+
+  .sidebar.collapsed .brand{
+    justify-content:center;
+    width:100%;
+  }
+
+  .sidebar.collapsed .toggle-btn{
+    width:38px;
+    height:38px;
+  }
+
   .sidebar-top{
     display:flex;
     align-items:center;
@@ -141,6 +157,18 @@ function isActive($file, $current) {
   .nav-label{
     font-weight:700;
     font-size:14px;
+  }
+
+  .sidebar.collapsed .side-link{
+    justify-content:center;
+    gap:0;
+    padding-left:8px;
+    padding-right:8px;
+  }
+
+  .sidebar.collapsed .nav-icon{
+    width:22px;
+    margin:0;
   }
 
   .user-box{
