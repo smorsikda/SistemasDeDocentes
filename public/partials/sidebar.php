@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../app/helpers/csrf.php';
+
 $me = $_SESSION['user'] ?? null;
 $current = basename($_SERVER['PHP_SELF'] ?? '');
 
