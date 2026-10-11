@@ -130,6 +130,19 @@ echo "\xEF\xBB\xBF";
 
 $out = fopen('php://output', 'w');
 
+function protectCsvCell($value): string
+{
+  $value = (string)($value ?? '');
+
+  // Spreadsheet apps may evaluate cells beginning with formula operators.
+  // A leading tab makes the value text in Excel-compatible CSV viewers.
+  if (preg_match('/^[\t\r\n ]*[=+\-@]/u', $value)) {
+    return "\t" . $value;
+  }
+
+  return $value;
+}
+
 fputcsv($out, [
   'ID',
   'Codigo',
@@ -203,7 +216,7 @@ while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $r['updated_at'],
   ];
 
-  fputcsv($out, $row, $delim);
+  fputcsv($out, array_map('protectCsvCell', $row), $delim);
 }
 
 fclose($out);
