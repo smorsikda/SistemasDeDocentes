@@ -16,10 +16,10 @@ function h($v){
 function normalizeGrade($value){
   $value = trim((string)$value);
   if ($value === '') return null;
-
+  $value = str_replace(',', '.', $value);
+  if (!is_numeric($value)) return false;
   $num = (float)$value;
-  if ($num < 0) $num = 0;
-
+  if ($num < 0 || $num > 100) return false;
   return round($num, 2);
 }
 
@@ -128,6 +128,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $group) {
   }
 
   $grades = $_POST['grades'] ?? [];
+  $gradeError = '';
+
+  if (!is_array($grades)) {
+    $gradeError = 'Los datos de notas enviados no son válidos.';
+  } else {
+    $stmt = $pdo->prepare('SELECT student_id FROM group_students WHERE group_id = ?');
+    $stmt->execute([$groupId]);
+    $allowedStudentIds = array_fill_keys(array_map('intval', $stmt->fetchAll(PDO::FETCH_COLUMN)), true);
+    foreach ($grades as $studentId => $studentGrades) {
+      if (!ctype_digit((string)$studentId) || !isset($allowedStudentIds[(int)$studentId]) || !is_array($studentGrades)) {
+        $gradeError = 'La lista incluye estudiantes o datos que no pertenecen a este grupo.';
+        break;
+      }
+      foreach (['exam1', 'exam2', 'exam3', 'exam4', 'exam5'] as $exam) {
+        $grade = normalizeGrade($studentGrades[$exam] ?? '');
+        if ($grade === false) {
+          $gradeError = 'Cada nota debe ser un número entre 0 y 100.';
+          break 2;
+        }
+      }
+    }
+  }
 
   $selExisting = $pdo->prepare("
     SELECT id
@@ -148,16 +170,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $group) {
     WHERE group_id = ? AND student_id = ?
   ");
 
-  try {
+  if ($gradeError !== '') {
+    $error = $gradeError;
+  } else try {
     $pdo->beginTransaction();
 
     $updatedStudentsCount = 0;
 
     foreach ($grades as $studentId => $g) {
       $studentId = (int)$studentId;
-      if ($studentId <= 0) {
-        continue;
-      }
 
       $exam1 = normalizeGrade($g['exam1'] ?? null);
       $exam2 = normalizeGrade($g['exam2'] ?? null);
@@ -202,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $group) {
     if ($pdo->inTransaction()) {
       $pdo->rollBack();
     }
-    exit("Ocurrió un error al guardar las notas.");
+    $error = "Ocurrió un error al guardar las notas.";
   }
 }
 
@@ -254,6 +275,7 @@ if ($group) {
     .filters .field{margin-top:0;min-width:260px;}
     .ok-msg{margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(47,191,113,.10);border:1px solid rgba(47,191,113,.35);color:var(--green);font-weight:700;}
     .warn-msg{margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.35);color:#f59e0b;font-weight:700;}
+    .error-msg{margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.35);color:#ef4444;font-weight:700;}
     .group-info{margin-top:14px;padding:14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
     .group-info .k{font-size:12px;color:var(--muted);margin-bottom:4px;}
     .group-info .v{font-weight:800;color:#e5e7eb;}
@@ -314,6 +336,10 @@ if ($group) {
       <div class="ok-msg">Notas guardadas correctamente.</div>
     <?php endif; ?>
 
+    <?php if (!empty($error)): ?>
+      <div class="error-msg"><?= h($error) ?></div>
+    <?php endif; ?>
+
     <?php if ($group && $isFinalized): ?>
       <div class="warn-msg">Este grupo ya fue finalizado. Las notas se muestran solo en modo lectura.</div>
     <?php endif; ?>
@@ -339,7 +365,7 @@ if ($group) {
       </div>
 
       <div class="note-help">
-        Ingresá notas iguales o mayores a 0. Podés dejar casillas vacías si no aplica esa evaluación.
+        Ingresá notas entre 0 y 100. Podés dejar casillas vacías si no aplica esa evaluación.
       </div>
 
       <form method="post">
