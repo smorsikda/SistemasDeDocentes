@@ -132,6 +132,3 @@ compose.yaml         Entorno local PHP + MariaDB
 
 `sql/schema1.sql` corresponde al esquema actual `docentes1_db`. `sql/schema.sql` es de una versión anterior y no debe usarse para una instalación nueva de esta versión. Para una base existente, revisa las migraciones disponibles en `sql/migrations/` y respalda los datos antes de aplicarlas.
 
-## Origen del proyecto
-
-Este repositorio conserva el historial Git del proyecto original: <https://github.com/poyito777/conatradec1>. Los commits nuevos deben describir el trabajo realmente realizado por cada integrante.
