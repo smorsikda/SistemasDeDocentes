@@ -16,7 +16,7 @@ function isActive($file, $current) {
 
   .sidebar{
     width:260px;
-    background:linear-gradient(180deg, rgba(7,18,14,.96), rgba(8,16,14,.92));
+    background:linear-gradient(180deg, rgba(26,18,14,.96), rgba(26,18,14,.92));
     border-right:1px solid var(--line);
     padding:18px 14px;
     position:sticky;
@@ -76,7 +76,7 @@ function isActive($file, $current) {
     font-weight:900;
     font-size:15px;
     line-height:1.1;
-    color:#fff;
+    color:#D5C4AE;
   }
 
   .brand-sub{
@@ -87,8 +87,8 @@ function isActive($file, $current) {
 
   .toggle-btn{
     border:1px solid var(--line);
-    background:rgba(255,255,255,.05);
-    color:#e5e7eb;
+    background:rgba(58,36,24,.25);
+    color:#D5C4AE;
     border-radius:12px;
     width:38px;
     height:38px;
@@ -131,20 +131,20 @@ function isActive($file, $current) {
     border-radius:14px;
     border:1px solid transparent;
     text-decoration:none;
-    color:#e5e7eb;
+    color:#D5C4AE;
     background:transparent;
     transition:.18s ease;
   }
 
   .side-link:hover{
-    background:rgba(255,255,255,.05);
+    background:rgba(58,36,24,.35);
     border-color:var(--line);
   }
 
   .side-link.active{
-    background:rgba(47,191,113,.12);
-    border-color:rgba(47,191,113,.35);
-    color:var(--green);
+    background:rgba(168,132,98,.12);
+    border-color:rgba(168,132,98,.35);
+    color:var(--accent);
   }
 
   .nav-icon{
@@ -175,13 +175,13 @@ function isActive($file, $current) {
     margin-top:18px;
     padding:12px;
     border-radius:14px;
-    background:rgba(255,255,255,.04);
+    background:rgba(58,36,24,.25);
     border:1px solid var(--line);
   }
 
   .user-name{
     font-weight:800;
-    color:#fff;
+    color:#D5C4AE;
     font-size:14px;
   }
 
