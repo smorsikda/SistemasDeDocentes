@@ -201,6 +201,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $trademark_registration = trim($_POST['trademark_registration'] ?? '');
   $course_purpose = trim($_POST['course_purpose'] ?? '');
   $number_of_members_raw = trim($_POST['number_of_members'] ?? '');
+
+  if ($organization_type === 'estudiante') {
+    $organization_name = '';
+    $organization_phone = '';
+    $organization_location = '';
+    $characterization = '';
+    $trademark_registration = '';
+    $number_of_members_raw = '';
+  }
+
   $future_projection = trim($_POST['future_projection'] ?? '');
   $enrolled_at = trim($_POST['enrolled_at'] ?? '');
   $observations = trim($_POST['observations'] ?? '');
@@ -574,7 +584,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .wizard-step-marker span:first-child{display:grid;place-items:center;width:22px;height:22px;border:1px solid #3D4337;border-radius:50%;font-weight:800;}
     .wizard-step-marker[aria-current="step"]{color:var(--text);}
     .wizard-step-marker[aria-current="step"] span:first-child,.wizard-step-marker.is-complete span:first-child{border-color:#6B7F67;background:#3E5A3F;color:#C7CBB8;}
-    .field[data-wizard-step][hidden]{display:none!important;}
+    .field[hidden]{display:none!important;}
+    .organization-student-note{color:var(--accent);font-weight:700;}
     .wizard-navigation{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line);}
     .wizard-navigation-group{display:flex;gap:10px;flex-wrap:wrap;}
     .wizard-navigation [hidden]{display:none!important;}
@@ -771,24 +782,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <option value="estudiante" <?= ($row['organization_type'] ?? '') === 'estudiante' ? 'selected' : '' ?>>Estudiante</option>
             <option value="productor" <?= ($row['organization_type'] ?? '') === 'productor' ? 'selected' : '' ?>>Productor</option>
           </select>
+          <div class="hint organization-student-note" id="studentOrganizationNote" hidden>Como estudiante, no necesitas ingresar datos de una organización.</div>
         </div>
 
-        <div class="field col4" data-wizard-step="2">
+        <div class="field col4" data-wizard-step="2" data-organization-details>
           <label for="organization_name">Nombre de organización</label>
           <input id="organization_name" name="organization_name" value="<?= h($row['organization_name'] ?? '') ?>">
         </div>
 
-        <div class="field col4" data-wizard-step="2">
+        <div class="field col4" data-wizard-step="2" data-organization-details>
           <label for="organization_phone">Teléfono de la organización</label>
           <input id="organization_phone" name="organization_phone" value="<?= h($row['organization_phone'] ?? '') ?>" placeholder="Ej: 88888888" maxlength="8" inputmode="numeric">
         </div>
 
-        <div class="field col6" data-wizard-step="2">
+        <div class="field col6" data-wizard-step="2" data-organization-details>
           <label for="organization_location">Ubicación de la organización</label>
           <input id="organization_location" name="organization_location" value="<?= h($row['organization_location'] ?? '') ?>">
         </div>
 
-        <div class="field col6" data-wizard-step="2">
+        <div class="field col6" data-wizard-step="2" data-organization-details>
           <label for="characterization">Caracterización</label>
           <select name="characterization" id="characterization">
             <option value="">Seleccionar</option>
@@ -800,7 +812,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </select>
         </div>
 
-        <div class="field col4" data-wizard-step="2">
+        <div class="field col4" data-wizard-step="2" data-organization-details>
           <label for="trademark_registration">Registro de marca</label>
           <select name="trademark_registration" id="trademark_registration">
             <option value="">Seleccionar</option>
@@ -809,7 +821,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </select>
         </div>
 
-        <div class="field col4" data-wizard-step="2">
+        <div class="field col4" data-wizard-step="2" data-organization-details>
           <label for="number_of_members">Número de socios</label>
           <input type="number" min="0" id="number_of_members" name="number_of_members" value="<?= h($row['number_of_members'] ?? '') ?>">
         </div>
@@ -925,13 +937,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const previousButton = document.getElementById('wizardPrevious');
     const nextButton = document.getElementById('wizardNext');
     const submitButton = document.getElementById('wizardSubmit');
+    const organizationTypeSelect = document.getElementById('organization_type');
+    const organizationDetails = Array.from(wizardForm.querySelectorAll('[data-organization-details]'));
+    const studentOrganizationNote = document.getElementById('studentOrganizationNote');
     let currentStep = 0;
+
+    function updateOrganizationFields() {
+      const isStudent = organizationTypeSelect.value === 'estudiante';
+      organizationDetails.forEach(function(field) {
+        field.hidden = isStudent || Number(field.dataset.wizardStep) !== currentStep;
+        if (isStudent) {
+          field.querySelectorAll('input, select, textarea').forEach(function(control) {
+            control.value = '';
+          });
+        }
+      });
+      studentOrganizationNote.hidden = !isStudent;
+    }
 
     function showStep(stepIndex, shouldScroll) {
       currentStep = Math.max(0, Math.min(stepIndex, steps.length - 1));
       fields.forEach(function(field) {
         field.hidden = Number(field.dataset.wizardStep) !== currentStep;
       });
+      updateOrganizationFields();
 
       const step = steps[currentStep];
       stepCount.textContent = 'Paso ' + (currentStep + 1) + ' de ' + steps.length;
@@ -982,6 +1011,8 @@ document.addEventListener('DOMContentLoaded', function() {
     previousButton.addEventListener('click', function() {
       showStep(currentStep - 1, true);
     });
+
+    organizationTypeSelect.addEventListener('change', updateOrganizationFields);
 
     wizardForm.addEventListener('submit', function(event) {
       const invalidControl = Array.from(wizardForm.querySelectorAll('input, select, textarea')).find(function(control) {
