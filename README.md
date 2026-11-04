@@ -1,17 +1,42 @@
-# Sistema de Docentes CONATRADEC
+# Sistema Académico CONATRADEC
 
-Aplicación web para administrar docentes, estudiantes, grupos, asistencias y notas. El backend está desarrollado en PHP con PDO; Apache sirve las páginas y MariaDB almacena los datos.
+Aplicación web para administrar docentes, estudiantes, grupos, asistencias y notas de los cursos de CONATRADEC. Está construida con PHP y MariaDB, y organizada como un monolito web sencillo de desplegar con XAMPP o Docker.
+
+[![Docker CI/CD](https://github.com/smorsikda/SistemasDeDocentes/actions/workflows/docker-ci.yml/badge.svg?branch=develop)](https://github.com/smorsikda/SistemasDeDocentes/actions/workflows/docker-ci.yml)
+![PHP 8.2](https://img.shields.io/badge/PHP-8.2-777BB4?logo=php&logoColor=white)
+![MariaDB 10.11](https://img.shields.io/badge/MariaDB-10.11-003545?logo=mariadb&logoColor=white)
+
+## Objetivo
+
+Centralizar el registro académico y el seguimiento de estudiantes en cursos de Barismo y Catación, manteniendo relacionados docentes, grupos, asistencia, notas e historial.
+
+## Módulos
+
+- **Acceso y administración:** inicio de sesión, roles de administrador y docente, cuentas de docentes, cambio y restablecimiento de contraseña.
+- **Estudiantes:** registro por secciones, perfil, ubicación, importación y exportación CSV, archivo histórico y constancias.
+- **Grupos:** creación y administración de grupos, asignación de estudiantes y cierre de grupo.
+- **Seguimiento académico:** asistencia, notas, historial y reportes imprimibles.
+- **Administración:** dashboard, guía del sistema y bitácora de actividad.
+
+## Arquitectura
+
+Aplicación PHP renderizada en el servidor. Apache sirve las páginas y recursos, PHP procesa formularios y reglas de negocio usando PDO, y MariaDB conserva los registros.
+
+```text
+Navegador ──HTML/CSS/JavaScript──► Apache + PHP ──PDO──► MariaDB
+```
 
 ## Tecnologías
 
-- PHP 8.2 y Apache.
-- MariaDB 10.11 (compatible con MySQL).
-- Docker y Docker Compose para desarrollo local.
-- GitHub Actions para revisar sintaxis PHP y construir la imagen Docker.
-- GitHub Container Registry (GHCR) para publicar la imagen de `main`.
-- Render para desplegar la aplicación y los servicios Docker.
+| Área | Tecnologías |
+| --- | --- |
+| Interfaz | HTML, CSS, JavaScript |
+| Servidor | PHP 8.2, PDO, Apache |
+| Base de datos | MariaDB 10.11 / MySQL compatible |
+| Desarrollo local | XAMPP o Docker Compose |
+| Integración continua | GitHub Actions: sintaxis PHP y construcción de imagen Docker |
 
-No se requiere Composer ni Node.js.
+No se requiere Composer ni Node.js. La imagen de `main` se publica en GitHub Container Registry (GHCR); el despliegue en Render es opcional y se describe más adelante.
 
 ## Ejecutar localmente con XAMPP
 
@@ -50,48 +75,57 @@ La migración `003_seed_nicaraguan_municipalities.sql` agrega los municipios ini
 
 `public/health.php` ofrece una comprobación sencilla de PHP y conexión a la base de datos: `/docentes/public/health.php`.
 
-## GitHub Actions y ramas
+## Integración continua y ramas
 
-El flujo `.github/workflows/docker-ci.yml`:
-
-- En cada push, revisa la sintaxis de los archivos PHP y construye la imagen Docker.
-- En pull requests hacia `develop` o `main`, repite esas validaciones.
-- Solo cuando se actualiza `main`, publica la imagen en GHCR con las etiquetas `latest` y `sha-<commit>`.
-
-Flujo de trabajo recomendado:
+El flujo `.github/workflows/docker-ci.yml` revisa la sintaxis PHP y construye la imagen Docker en cada push y en pull requests hacia `develop` o `main`. Cuando se actualiza `main`, publica la imagen en GHCR.
 
 ```text
-main (versión estable / despliegue)
-└── develop (integración)
-    ├── feature/nombre-de-tarea (tu trabajo)
-    └── feature/nombre-de-tarea (trabajo de Shurone)
+main (versión final estable)
+└── develop (integración del equipo durante el proyecto)
+    ├── feature/nombre-de-tarea
+    └── fix/nombre-del-error
 ```
 
-Comandos para empezar una tarea desde `develop`:
+Cada integrante trabaja en su propia rama, creada desde `develop`. No hagan cambios directamente en `develop` o `main`. Usen `feature/` para nuevas funciones y `fix/` para corregir errores. Al terminar, abran un pull request hacia `develop`; integren `develop` en `main` cuando el equipo confirme que el proyecto está listo para entregar.
+
+### Tarea propuesta para Shurone: registrar la reactivación en la bitácora
+
+La aplicación ya guarda en la bitácora el archivado de estudiantes, pero la reactivación por el administrador no queda registrada. Esta tarea completa la trazabilidad de ese cambio.
+
+**Rama:** `feature/auditoria-reactivacion-estudiantes`
+
+**Alcance:** actualizar `public/student_reactivate.php` para comprobar que el estudiante exista y esté archivado, reactivarlo y registrar la acción mediante el helper existente en `backend/helpers/log.php`. Mantener el acceso exclusivo del administrador, el método POST y la protección CSRF.
+
+**Criterios de aceptación:**
+
+- Una reactivación válida deja al estudiante activo y crea una entrada `student.reactivate` con el usuario administrador y el ID del estudiante.
+- Un ID inválido o un estudiante inexistente no crea una entrada falsa de auditoría.
+- Repetir la acción sobre un estudiante ya activo no duplica registros ni reporta una reactivación exitosa.
+- El cambio se puede comprobar desde la bitácora y la lista de estudiantes.
+
+Para iniciar, Shurone debe tener el repositorio clonado y ejecutar desde PowerShell:
 
 ```powershell
-git push -u origin develop
-```
-
-Ese comando publica la rama de integración la primera vez. Después, para iniciar cada tarea:
-
-```powershell
+git fetch origin
 git switch develop
-git pull origin develop
-git switch -c feature/nombre-de-tarea
+git pull --ff-only origin develop
+git switch -c feature/auditoria-reactivacion-estudiantes
 ```
 
-Al terminar, sube la rama y abre un pull request hacia `develop`:
+Al terminar, debe revisar sus cambios, crear el commit y subir la rama:
 
 ```powershell
-git push -u origin feature/nombre-de-tarea
+git status
+git add public/student_reactivate.php
+git commit -m "feat: registra reactivacion de estudiantes en auditoria"
+git push -u origin feature/auditoria-reactivacion-estudiantes
 ```
 
-Cuando el equipo considere que `develop` está listo, abre otro pull request de `develop` hacia `main`. Asigna a Shurone como responsable/revisor en el pull request de GitHub; una rama por sí sola no asigna tareas ni personas. Cada integrante debe usar su propia cuenta y autoría Git para que los commits reflejen quién hizo cada cambio.
+En GitHub: **Pull requests → New pull request**, base `develop` y compare `feature/auditoria-reactivacion-estudiantes`. En la descripción, incluir qué cambió y cómo se verificó. Asigna a Shurone en GitHub si su cuenta está disponible; el nombre de rama no asigna personas. Cada integrante debe usar su propia cuenta Git para que sus commits tengan la autoría correcta.
 
-### Tarea sugerida para Shurone
+Otras mejoras para priorizar después: ampliar las pruebas automatizadas de reglas de negocio; revisar la consistencia de validaciones entre formularios e importación CSV; y mejorar accesibilidad y presentación móvil de reportes y pantallas administrativas. Conviene tomar una mejora por rama y acordar criterios de aceptación antes de empezar.
 
-Desde `develop`, Shurone puede crear `feature/render-deploy-checklist` y preparar `docs/RENDER_DEPLOYMENT_CHECKLIST.md` con los pasos para crear los servicios de aplicación y MySQL, configurar variables y health check, e importar el esquema inicial. La entrega es un pull request hacia `develop`; no debe incluir credenciales ni datos personales. Esto permite que cada persona trabaje en una rama independiente y que el PR muestre su trabajo real.
+Cuando el equipo considere que `develop` está listo, abre otro pull request de `develop` hacia `main`.
 
 ## Despliegue en Render
 
@@ -120,14 +154,16 @@ No subas `.env`, contraseñas, datos personales ni `backend/config/db.local.php`
 ## Estructura del proyecto
 
 ```text
-backend/             Configuración, helpers y middleware PHP
-frontend/           CSS, imágenes y componentes compartidos del frontend
-public/              Páginas públicas y endpoints PHP
-sql/                 Esquema inicial y migraciones
-docker/              Configuración auxiliar de la imagen PHP/Apache
-.github/workflows/   Automatización CI/CD de GitHub Actions
-Dockerfile           Imagen de la aplicación
-compose.yaml         Entorno local PHP + MariaDB
+backend/              Conexión a la base, helpers y middleware
+frontend/             Estilos, imágenes y componentes compartidos
+public/               Páginas PHP y recursos accesibles por el navegador
+sql/                  Esquemas iniciales y migraciones
+docker/               Configuración de Apache y PHP para Docker
+docs/                 Guías del proyecto y de despliegue
+.github/workflows/    Validación y publicación de imagen
+Dockerfile            Imagen de la aplicación
+compose.yaml          Entorno local PHP + MariaDB
+README.md             Guía principal del repositorio
 ```
 
 ## Instalación de base de datos
