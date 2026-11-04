@@ -219,7 +219,7 @@ $lastAttendances = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 .v{
   font-weight:800;
-  color:#e5e7eb;
+  color:#C7CBB8;
   margin:0;
 }
 
@@ -227,7 +227,7 @@ $lastAttendances = $stmt->fetchAll(PDO::FETCH_ASSOC);
   font-size:15px;
   font-weight:900;
   margin:18px 0 10px;
-  color:#e5e7eb;
+  color:#C7CBB8;
 }
 
 .actions{
@@ -249,19 +249,19 @@ $lastAttendances = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 .btnS{
-  border:1px solid rgba(47,191,113,.35);
-  background:rgba(47,191,113,.10);
-  color:var(--green);
+  border:1px solid rgba(107,127,103,.35);
+  background:rgba(107,127,103,.10);
+  color:var(--accent);
 }
 
 .btnG{
-  border:1px solid rgba(148,163,184,.25);
+  border:1px solid rgba(61,67,55,.25);
   background:rgba(255,255,255,.05);
-  color:#cbd5e1;
+  color:#C7CBB8;
 }
 
 .btn2{
-  background:linear-gradient(180deg,var(--green),var(--green2));
+  background:linear-gradient(180deg,var(--accent),var(--accent-dark));
   color:#06110a;
   border:none;
 }
@@ -277,7 +277,7 @@ $lastAttendances = $stmt->fetchAll(PDO::FETCH_ASSOC);
 .stat b{
   font-size:22px;
   display:block;
-  color:#e5e7eb;
+  color:#C7CBB8;
   margin-bottom:6px;
 }
 
@@ -330,9 +330,9 @@ tr:hover{
 }
 
 .pill.ok{
-  border-color:rgba(34,197,94,.35);
-  color:#22c55e;
-  background:rgba(34,197,94,.10);
+  border-color:rgba(107,127,103,.35);
+  color:#6B7F67;
+  background:rgba(107,127,103,.10);
 }
 
 .pill.bad{
@@ -342,9 +342,9 @@ tr:hover{
 }
 
 .pill.cancel{
-  border-color:rgba(148,163,184,.35);
-  color:#cbd5e1;
-  background:rgba(148,163,184,.10);
+  border-color:rgba(61,67,55,.35);
+  color:#C7CBB8;
+  background:rgba(61,67,55,.10);
 }
 
 .pill.pending{

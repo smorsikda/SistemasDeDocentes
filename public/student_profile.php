@@ -235,7 +235,7 @@ $overallAcademicAverage = $averageCount > 0 ? round($averageSum / $averageCount,
       justify-content:center;
       padding:10px 14px;
       border-radius:14px;
-      background:linear-gradient(180deg,var(--green),var(--green2));
+      background:linear-gradient(180deg,var(--accent),var(--accent-dark));
       color:#06110a;
       font-weight:800;
       text-decoration:none;
@@ -247,9 +247,9 @@ $overallAcademicAverage = $averageCount > 0 ? round($averageSum / $averageCount,
       justify-content:center;
       padding:10px 14px;
       border-radius:14px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
       font-weight:800;
       text-decoration:none;
     }
@@ -260,7 +260,7 @@ $overallAcademicAverage = $averageCount > 0 ? round($averageSum / $averageCount,
       justify-content:center;
       padding:10px 14px;
       border-radius:14px;
-      border:1px solid rgba(148,163,184,.35);
+      border:1px solid rgba(61,67,55,.35);
       background:rgba(255,255,255,.06);
       color:rgba(255,255,255,.92);
       font-weight:800;
@@ -290,7 +290,7 @@ $overallAcademicAverage = $averageCount > 0 ? round($averageSum / $averageCount,
     .v{
       margin:0;
       font-weight:800;
-      color:#e5e7eb;
+      color:#C7CBB8;
     }
 
     .muted{
@@ -324,7 +324,7 @@ $overallAcademicAverage = $averageCount > 0 ? round($averageSum / $averageCount,
       border-radius:999px;
       border:1px solid var(--line);
       font-size:12px;
-      color:#e5e7eb;
+      color:#C7CBB8;
       background:rgba(255,255,255,.04);
     }
 
@@ -332,7 +332,7 @@ $overallAcademicAverage = $averageCount > 0 ? round($averageSum / $averageCount,
       font-size:15px;
       font-weight:900;
       margin:18px 0 10px;
-      color:#e5e7eb;
+      color:#C7CBB8;
     }
 
     .summary-card{
@@ -345,7 +345,7 @@ $overallAcademicAverage = $averageCount > 0 ? round($averageSum / $averageCount,
     .summary-card .num{
       font-size:28px;
       font-weight:900;
-      color:#e5e7eb;
+      color:#C7CBB8;
       line-height:1;
       margin:4px 0 0;
     }
@@ -364,9 +364,9 @@ $overallAcademicAverage = $averageCount > 0 ? round($averageSum / $averageCount,
     }
 
     .status-pill.ok{
-      color:#22c55e;
-      border-color:rgba(34,197,94,.35);
-      background:rgba(34,197,94,.10);
+      color:#6B7F67;
+      border-color:rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
     }
 
     .status-pill.bad{

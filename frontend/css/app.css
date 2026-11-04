@@ -1,13 +1,16 @@
 :root{
-  --bg: #1A120E;            /* fondo oscuro cálido */
-  --card: rgba(58,36,24,.45);
-  --card2: rgba(58,36,24,.60);
-  --line: rgba(107,74,46,.45);
-  --text: #D5C4AE;
-  --muted: rgba(213,196,174,.55);
+  --bg: #0F1F17;
+  --card: rgba(30,58,46,.72);
+  --card2: rgba(30,58,46,.92);
+  --line: rgba(62,90,63,.72);
+  --text: #C7CBB8;
+  --muted: rgba(199,203,184,.68);
+  --surface-strong: #3D4337;
 
-  --accent: #A88462;        /* acento principal */
-  --accent-dark: #6B4A2E;   /* acento oscuro */
+  --accent: #6B7F67;
+  --accent-dark: #3E5A3F;
+  --green: var(--accent);
+  --green2: var(--accent-dark);
   --danger: #ff5a5f;
 
   --radius: 18px;
@@ -21,8 +24,8 @@ body{
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
   color: var(--text);
   background:
-    radial-gradient(1000px 500px at 20% 0%, rgba(168,132,98,.25), transparent 55%),
-    radial-gradient(900px 450px at 85% 15%, rgba(107,74,46,.18), transparent 60%),
+    radial-gradient(1000px 520px at 16% -10%, rgba(62,90,63,.28), transparent 58%),
+    radial-gradient(900px 480px at 95% 5%, rgba(107,127,103,.15), transparent 62%),
     var(--bg);
 }
 
@@ -56,8 +59,8 @@ a:hover{opacity:.9}
 .brand img{
   width:44px; height:44px; object-fit:contain;
   border-radius: 12px;
-  background: rgba(58,36,24,.35);
-  border:1px solid rgba(107,74,46,.45);
+  background: rgba(0,0,0,.24);
+  border:1px solid var(--line);
   padding:6px;
 }
 .brand .title{
@@ -93,8 +96,8 @@ input, select, textarea{
   outline:none;
 }
 input:focus, select:focus, textarea:focus{
-  border-color: rgba(168,132,98,.55);
-  box-shadow: 0 0 0 4px rgba(168,132,98,.12);
+  border-color: rgba(107,127,103,.75);
+  box-shadow: 0 0 0 4px rgba(107,127,103,.18);
 }
 
 .btn{
@@ -104,7 +107,7 @@ input:focus, select:focus, textarea:focus{
   border:0;
   border-radius: 14px;
   background: linear-gradient(180deg, var(--accent), var(--accent-dark));
-  color: #1A120E;
+  color: #0F1F17;
   font-weight: 700;
   cursor:pointer;
 }
@@ -117,7 +120,7 @@ input:focus, select:focus, textarea:focus{
   border-radius: 14px;
   border:1px solid rgba(255,90,95,.35);
   background: rgba(255,90,95,.10);
-  color: rgba(213,196,174,.9);
+  color: rgba(199,203,184,.9);
   font-size: 13px;
 }
 
@@ -197,8 +200,8 @@ input:focus, select:focus, textarea:focus{
   display:inline-block;
   padding:8px 14px;
   border-radius:12px;
-  background:rgba(168,132,98,.15);
-  border:1px solid rgba(168,132,98,.3);
+  background:rgba(107,127,103,.16);
+  border:1px solid rgba(107,127,103,.42);
   color:var(--accent);
   font-size:14px;
 }
@@ -215,7 +218,7 @@ table{
 th{
   text-align:left;
   padding:12px;
-  background:rgba(58,36,24,.35);
+  background:rgba(61,67,55,.45);
   color:var(--muted);
   border-bottom:1px solid var(--line);
 }
@@ -226,23 +229,23 @@ td{
 }
 
 tr:hover{
-  background:rgba(58,36,24,.25);
+  background:rgba(255,255,255,.025);
 }
 
 /* ===== Fix dropdown options (Windows/Chrome) ===== */
 select{
-  background-color: rgba(58,36,24,.35); /* tu estilo */
-  color: #D5C4AE;
+  background-color: #0F1F17;
+  color: #C7CBB8;
 }
 
 /* La lista desplegable */
 select option{
-  background-color: #1A120E;  /* oscuro real */
-  color: #D5C4AE;             /* texto claro */
+  background-color: #0F1F17;
+  color: #C7CBB8;
 }
 
 /* Para opciones seleccionadas (algunos navegadores) */
 select option:checked{
-  background-color: #3A2418;
-  color: #D5C4AE;
+  background-color: #3D4337;
+  color: #C7CBB8;
 }

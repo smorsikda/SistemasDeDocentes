@@ -407,16 +407,16 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
 
     .group-meta .v{
       font-weight:800;
-      color:#e5e7eb;
+      color:#C7CBB8;
     }
 
     .ok-msg{
       margin-top:14px;
       padding:12px 14px;
       border-radius:12px;
-      background:rgba(47,191,113,.10);
-      border:1px solid rgba(47,191,113,.35);
-      color:var(--green);
+      background:rgba(107,127,103,.10);
+      border:1px solid rgba(107,127,103,.35);
+      color:var(--accent);
       font-weight:700;
     }
 
@@ -465,9 +465,9 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
       justify-content:center;
       padding:10px 14px;
       border-radius:12px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
       font-weight:800;
       cursor:pointer;
       text-decoration:none;
@@ -477,9 +477,9 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
     }
 
     .mini-btn.gray{
-      border:1px solid rgba(148,163,184,.25);
+      border:1px solid rgba(61,67,55,.25);
       background:rgba(255,255,255,.05);
-      color:#cbd5e1;
+      color:#C7CBB8;
     }
 
     .mini-btn.red{
@@ -489,9 +489,9 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
     }
 
     .mini-btn.disabled{
-      border:1px solid rgba(148,163,184,.25);
+      border:1px solid rgba(61,67,55,.25);
       background:rgba(255,255,255,.04);
-      color:#94a3b8;
+      color:#6B7F67;
       cursor:not-allowed;
       pointer-events:none;
     }
@@ -524,7 +524,7 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
 
     .box-title{
       font-weight:900;
-      color:#e5e7eb;
+      color:#C7CBB8;
       margin:0;
     }
 
@@ -569,7 +569,7 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
 
     .code{
       font-weight:800;
-      color:#e5e7eb;
+      color:#C7CBB8;
       white-space:nowrap;
     }
 
@@ -593,9 +593,9 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
     }
 
     .status-a{
-      color:var(--green);
-      border-color:rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
+      color:var(--accent);
+      border-color:rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
     }
 
     .status-d{
@@ -651,7 +651,7 @@ $saved = isset($_GET['saved']) && $_GET['saved'] == '1';
 
     .preview-name{
       font-weight:800;
-      color:#e5e7eb;
+      color:#C7CBB8;
     }
 
     .preview-meta{

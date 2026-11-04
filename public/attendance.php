@@ -162,13 +162,13 @@ if ($attendanceId > 0) {
     .date-box{display:flex;gap:10px;align-items:end;flex-wrap:wrap}
     .date-box label{display:block;font-size:13px;margin-bottom:6px;color:#374151;font-weight:700}
     .date-box input[type="date"]{background:#f3f4f6;color:#111827;border:1px solid #d1d5db;border-radius:12px;padding:10px 12px}
-    .toolbar-btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:12px;border:1px solid #bbf7d0;background:#ecfdf5;color:#16a34a;font-weight:800;text-decoration:none;cursor:pointer}
+    .toolbar-btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:12px;border:1px solid #bbf7d0;background:#ecfdf5;color:#3E5A3F;font-weight:800;text-decoration:none;cursor:pointer}
     .toolbar-btn.back{border-color:#d1d5db;background:#f9fafb;color:#374151}
-    .toolbar-btn.print{border-color:#bbf7d0;background:#ecfdf5;color:#16a34a}
+    .toolbar-btn.print{border-color:#bbf7d0;background:#ecfdf5;color:#3E5A3F}
     .table-wrap{padding:16px 24px 8px}
-    table{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;overflow:hidden;border:1px solid #e5e7eb;border-radius:14px}
+    table{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;overflow:hidden;border:1px solid #C7CBB8;border-radius:14px}
     thead th{background:#111827;color:#ffffff;text-align:left;padding:14px 16px;font-size:13px;letter-spacing:.2px}
-    tbody td{padding:14px 16px;border-top:1px solid #e5e7eb;background:#ffffff;vertical-align:middle}
+    tbody td{padding:14px 16px;border-top:1px solid #C7CBB8;background:#ffffff;vertical-align:middle}
     tbody tr:nth-child(even) td{background:#f9fafb}
     .col-num{width:90px;font-weight:800;color:#374151}
     .student-name{font-weight:700;color:#111827}
@@ -177,16 +177,16 @@ if ($attendanceId > 0) {
     .attendance-group{display:flex;gap:12px;flex-wrap:wrap}
     .attendance-option input{display:none}
     .attendance-option span{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:2px solid #d1d5db;background:#ffffff;color:#374151;font-weight:800;cursor:pointer;transition:.15s ease;user-select:none}
-    .attendance-option.present input:checked + span{background:#dcfce7;border-color:#22c55e;color:#166534}
+    .attendance-option.present input:checked + span{background:#dcfce7;border-color:#6B7F67;color:#3E5A3F}
     .attendance-option.absent input:checked + span{background:#fee2e2;border-color:#ef4444;color:#991b1b}
     .attendance-option span:hover{transform:translateY(-1px)}
     .sheet-footer{padding:20px 24px 26px}
     .sign{margin-top:26px;padding-top:18px;width:320px;border-top:1px solid #9ca3af;color:#374151;font-size:14px}
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-    .save-btn{width:100%;padding:14px 18px;border:none;border-radius:14px;background:linear-gradient(180deg, #34d399, #16a34a);color:#052e16;font-weight:900;cursor:pointer;font-size:15px}
+    .save-btn{width:100%;padding:14px 18px;border:none;border-radius:14px;background:linear-gradient(180deg, #34d399, #3E5A3F);color:#052e16;font-weight:900;cursor:pointer;font-size:15px}
     .save-btn:hover{filter:brightness(.98)}
     .empty{padding:24px;text-align:center;color:#6b7280;font-weight:600}
-    .ok-msg{margin:0 24px 8px;padding:12px 14px;border-radius:12px;background:#ecfdf5;border:1px solid #bbf7d0;color:#166534;font-weight:700}
+    .ok-msg{margin:0 24px 8px;padding:12px 14px;border-radius:12px;background:#ecfdf5;border:1px solid #bbf7d0;color:#3E5A3F;font-weight:700}
     .error-msg{margin:0 24px 8px;padding:12px 14px;border-radius:12px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-weight:700}
     @media print{
       body{background:#fff}

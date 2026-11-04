@@ -97,7 +97,7 @@ $today_human = date('d/m/Y');
     }
 
     body{
-      background:#0b1220;
+      background:#0F1F17;
       margin:0;
     }
 
@@ -223,15 +223,15 @@ $today_human = date('d/m/Y');
       gap:10px;
       justify-content:flex-end;
       padding:14px 26px;
-      background:#0b1220;
+      background:#0F1F17;
     }
 
     .btnPrint{
       padding:10px 14px;
       border-radius:12px;
-      border:1px solid rgba(47,191,113,.5);
-      background:rgba(47,191,113,.12);
-      color:#d1fae5;
+      border:1px solid rgba(107,127,103,.5);
+      background:rgba(107,127,103,.12);
+      color:#C7CBB8;
       font-weight:800;
       cursor:pointer;
     }
@@ -239,9 +239,9 @@ $today_human = date('d/m/Y');
     .btnBack{
       padding:10px 14px;
       border-radius:12px;
-      border:1px solid rgba(148,163,184,.35);
+      border:1px solid rgba(61,67,55,.35);
       background:rgba(255,255,255,.06);
-      color:#e5e7eb;
+      color:#C7CBB8;
       font-weight:800;
       text-decoration:none;
     }

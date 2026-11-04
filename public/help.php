@@ -44,7 +44,7 @@ function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
       font-size:12px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
-    .btnS{display:inline-block;padding:10px 14px;border-radius:14px;border:1px solid rgba(47,191,113,.35);background:rgba(47,191,113,.10);color:var(--green);font-weight:800}
+    .btnS{display:inline-block;padding:10px 14px;border-radius:14px;border:1px solid rgba(107,127,103,.35);background:rgba(107,127,103,.10);color:var(--accent);font-weight:800}
     ul{margin:10px 0 0 18px;color:var(--muted)}
     li{margin:6px 0}
   </style>

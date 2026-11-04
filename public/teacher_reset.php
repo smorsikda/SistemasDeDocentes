@@ -102,8 +102,8 @@ log_activity(
       margin-top:16px;
       padding:16px;
       border-radius:16px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
     }
 
     .box p{
@@ -124,7 +124,7 @@ log_activity(
       font-size:20px;
       font-weight:900;
       letter-spacing:.5px;
-      color:#e5e7eb;
+      color:#C7CBB8;
       word-break:break-all;
     }
 
@@ -152,9 +152,9 @@ log_activity(
       justify-content:center;
       padding:10px 14px;
       border-radius:12px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
       font-weight:800;
       text-decoration:none;
       cursor:pointer;
@@ -166,9 +166,9 @@ log_activity(
       justify-content:center;
       padding:10px 14px;
       border-radius:12px;
-      border:1px solid rgba(148,163,184,.25);
+      border:1px solid rgba(61,67,55,.25);
       background:rgba(255,255,255,.05);
-      color:#cbd5e1;
+      color:#C7CBB8;
       font-weight:800;
       text-decoration:none;
       cursor:pointer;
@@ -180,9 +180,9 @@ log_activity(
       gap:8px;
       padding:8px 12px;
       border-radius:999px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
       font-weight:800;
       font-size:13px;
     }

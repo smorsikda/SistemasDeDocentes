@@ -111,7 +111,7 @@ if ($schoolName === '') {
     body{
       margin:0;
       padding:24px;
-      background:#0b1220;
+      background:#0F1F17;
       font-family:"Georgia","Times New Roman",serif;
     }
 
@@ -132,7 +132,7 @@ if ($schoolName === '') {
       border-radius:12px;
       border:1px solid rgba(255,255,255,.15);
       background:rgba(255,255,255,.06);
-      color:#fff;
+      color:#C7CBB8;
       font-weight:700;
       text-decoration:none;
       cursor:pointer;
@@ -140,9 +140,9 @@ if ($schoolName === '') {
     }
 
     .btn.print{
-      border-color:rgba(47,191,113,.45);
-      background:rgba(47,191,113,.14);
-      color:#d1fae5;
+      border-color:rgba(107,127,103,.45);
+      background:rgba(107,127,103,.14);
+      color:#C7CBB8;
     }
 
     .page{

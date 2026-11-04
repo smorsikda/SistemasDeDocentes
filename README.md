@@ -46,6 +46,8 @@ docker compose down
 
 El archivo `schema1.sql` contiene `DROP TABLE` y solo se debe usar para crear una base local nueva. No se vuelve a importar automáticamente en un volumen ya inicializado. No uses ese archivo para actualizar una base con información que quieras conservar; para una base existente, aplica la migración correspondiente de `sql/migrations/` después de un respaldo.
 
+La migración `003_seed_nicaraguan_municipalities.sql` agrega los municipios iniciales al catálogo sin borrar registros existentes. Aplícala también en bases existentes para habilitar el selector de municipios del formulario de estudiantes.
+
 `public/health.php` ofrece una comprobación sencilla de PHP y conexión a la base de datos: `/docentes/public/health.php`.
 
 ## GitHub Actions y ramas

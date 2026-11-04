@@ -121,8 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       margin-top:14px;
       padding:14px 16px;
       border-radius:16px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
       line-height:1.7;
     }
 
@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       border:1px solid var(--line);
       font-size:18px;
       font-weight:900;
-      color:#e5e7eb;
+      color:#C7CBB8;
       word-break:break-all;
     }
 
@@ -159,9 +159,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       justify-content:center;
       padding:10px 14px;
       border-radius:12px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
       font-weight:800;
       text-decoration:none;
       cursor:pointer;
@@ -173,9 +173,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       justify-content:center;
       padding:10px 14px;
       border-radius:12px;
-      border:1px solid rgba(148,163,184,.25);
+      border:1px solid rgba(61,67,55,.25);
       background:rgba(255,255,255,.05);
-      color:#cbd5e1;
+      color:#C7CBB8;
       font-weight:800;
       text-decoration:none;
       cursor:pointer;

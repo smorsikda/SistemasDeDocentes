@@ -197,19 +197,19 @@ $groupAverage = $countFinalGrades > 0 ? round($sumFinalGrades / $countFinalGrade
     }
 
     .btnS{
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
     }
 
     .btnG{
-      border:1px solid rgba(148,163,184,.25);
+      border:1px solid rgba(61,67,55,.25);
       background:rgba(255,255,255,.05);
-      color:#cbd5e1;
+      color:#C7CBB8;
     }
 
     .btn2{
-      background:linear-gradient(180deg,var(--green),var(--green2));
+      background:linear-gradient(180deg,var(--accent),var(--accent-dark));
       color:#06110a;
       border:none;
     }
@@ -237,7 +237,7 @@ $groupAverage = $countFinalGrades > 0 ? round($sumFinalGrades / $countFinalGrade
     .summary-card .v{
       font-size:26px;
       font-weight:900;
-      color:#e5e7eb;
+      color:#C7CBB8;
       line-height:1;
     }
 
@@ -260,7 +260,7 @@ $groupAverage = $countFinalGrades > 0 ? round($sumFinalGrades / $countFinalGrade
 
     .group-info .v{
       font-weight:800;
-      color:#e5e7eb;
+      color:#C7CBB8;
     }
 
     .table-wrap{
@@ -295,7 +295,7 @@ $groupAverage = $countFinalGrades > 0 ? round($sumFinalGrades / $countFinalGrade
 
     .student-name{
       font-weight:800;
-      color:#e5e7eb;
+      color:#C7CBB8;
     }
 
     .small{
@@ -318,9 +318,9 @@ $groupAverage = $countFinalGrades > 0 ? round($sumFinalGrades / $countFinalGrade
     }
 
     .status-pill.ok{
-      color:#22c55e;
-      border-color:rgba(34,197,94,.35);
-      background:rgba(34,197,94,.10);
+      color:#6B7F67;
+      border-color:rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
     }
 
     .status-pill.bad{

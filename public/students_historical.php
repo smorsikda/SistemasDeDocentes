@@ -196,9 +196,9 @@ function statusClass($status){
       justify-content:center;
       padding:10px 14px;
       border-radius:14px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
       font-weight:800;
       text-decoration:none;
     }
@@ -222,9 +222,9 @@ function statusClass($status){
       justify-content:center;
       padding:8px 12px;
       border-radius:12px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.12);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.12);
+      color:var(--accent);
       font-weight:700;
       text-decoration:none;
     }
@@ -292,7 +292,7 @@ function statusClass($status){
       border-radius:999px;
       background:rgba(255,255,255,.05);
       border:1px solid var(--line);
-      color:#e5e7eb;
+      color:#C7CBB8;
       font-size:13px;
       font-weight:700;
     }
@@ -303,7 +303,7 @@ function statusClass($status){
       border-radius:999px;
       border:1px solid var(--line);
       font-size:12px;
-      color:#e5e7eb;
+      color:#C7CBB8;
       background:rgba(255,255,255,.04);
     }
 
@@ -321,9 +321,9 @@ function statusClass($status){
     }
 
     .status-pill.ok{
-      color:#22c55e;
-      border-color:rgba(34,197,94,.35);
-      background:rgba(34,197,94,.10);
+      color:#6B7F67;
+      border-color:rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
     }
 
     .status-pill.bad{
@@ -464,7 +464,7 @@ function statusClass($status){
               </td>
 
               <td>
-                <div style="font-weight:800; color:#e5e7eb;"><?= h($r['full_name']) ?></div>
+                <div style="font-weight:800; color:#C7CBB8;"><?= h($r['full_name']) ?></div>
                 <div class="small"><?= h($r['school_name'] ?: '—') ?></div>
                 <?php if (!empty($r['profession'])): ?>
                   <div class="small">Profesión: <?= h($r['profession']) ?></div>

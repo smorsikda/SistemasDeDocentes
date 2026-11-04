@@ -141,7 +141,7 @@ $totalRows = count($rows);
       border-radius:999px;
       background:rgba(255,255,255,.05);
       border:1px solid var(--line);
-      color:#e5e7eb;
+      color:#C7CBB8;
       font-size:13px;
       font-weight:700;
     }
@@ -191,7 +191,7 @@ $totalRows = count($rows);
 
     .code{
       font-weight:800;
-      color:#e5e7eb;
+      color:#C7CBB8;
     }
 
     .btnS{
@@ -200,9 +200,9 @@ $totalRows = count($rows);
       justify-content:center;
       padding:8px 12px;
       border-radius:12px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
       font-weight:800;
       text-decoration:none;
       cursor:pointer;
@@ -214,7 +214,7 @@ $totalRows = count($rows);
       justify-content:center;
       padding:8px 12px;
       border-radius:12px;
-      border:1px solid rgba(148,163,184,.35);
+      border:1px solid rgba(61,67,55,.35);
       background:rgba(255,255,255,.06);
       color:rgba(255,255,255,.92);
       font-weight:700;
@@ -236,9 +236,9 @@ $totalRows = count($rows);
     }
 
     .pill.ok{
-      border-color:rgba(34,197,94,.35);
-      color:#22c55e;
-      background:rgba(34,197,94,.10);
+      border-color:rgba(107,127,103,.35);
+      color:#6B7F67;
+      background:rgba(107,127,103,.10);
     }
 
     .pill.bad{

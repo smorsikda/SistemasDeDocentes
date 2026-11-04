@@ -59,9 +59,9 @@ function h($v){
       justify-content:center;
       padding:10px 14px;
       border-radius:12px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
       font-weight:800;
       text-decoration:none;
       cursor:pointer;
@@ -139,8 +139,8 @@ function h($v){
     }
 
     .on{
-      border-color:rgba(47,191,113,.35);
-      color:var(--green);
+      border-color:rgba(107,127,103,.35);
+      color:var(--accent);
     }
 
     .off{
@@ -224,7 +224,7 @@ function h($v){
           <tr>
             <td><?= (int)$t['id'] ?></td>
             <td>
-              <div style="font-weight:800;color:#e5e7eb;">
+              <div style="font-weight:800;color:#C7CBB8;">
                 <?= h($t['name']) ?>
               </div>
             </td>

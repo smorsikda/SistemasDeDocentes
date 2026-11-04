@@ -7,6 +7,25 @@ $current = basename($_SERVER['PHP_SELF'] ?? '');
 function isActive($file, $current) {
     return $file === $current ? 'active' : '';
 }
+
+function sidebarIcon(string $name): string {
+    $icons = [
+        'dashboard' => '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>',
+        'students' => '<path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+        'groups' => '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+        'attendance' => '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M8 14l2 2 4-4"/>',
+        'grades' => '<path d="M4 19V5M4 19h17"/><rect x="7" y="12" width="3" height="5" rx=".5"/><rect x="13" y="8" width="3" height="9" rx=".5"/><rect x="19" y="4" width="2" height="13" rx=".5"/>',
+        'teachers' => '<circle cx="12" cy="8" r="4"/><path d="M5 21v-1a7 7 0 0 1 14 0v1M19 8l1.5 1.5L23 7"/>',
+        'history' => '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v4h10V4M8 14h8M8 17h5"/>',
+        'password' => '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3"/>',
+        'audit' => '<path d="M8 3h8l4 4v14H4V3z"/><path d="M8 3v5h8V3M8 13h8M8 17h5"/>',
+        'import' => '<path d="M12 16V4m0 0L8 8m4-4 4 4"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/>',
+        'help' => '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M4 5.5v14A2.5 2.5 0 0 1 6.5 17H20M9 7h7M9 11h7"/>',
+        'logout' => '<path d="M10 17l5-5-5-5M15 12H3"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/>',
+    ];
+
+    return '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . ($icons[$name] ?? '') . '</svg>';
+}
 ?>
 <style>
   .layout{
@@ -16,7 +35,7 @@ function isActive($file, $current) {
 
   .sidebar{
     width:260px;
-    background:linear-gradient(180deg, rgba(26,18,14,.96), rgba(26,18,14,.92));
+    background:linear-gradient(180deg, #0F1F17, #0B1811);
     border-right:1px solid var(--line);
     padding:18px 14px;
     position:sticky;
@@ -76,7 +95,7 @@ function isActive($file, $current) {
     font-weight:900;
     font-size:15px;
     line-height:1.1;
-    color:#D5C4AE;
+    color:var(--text);
   }
 
   .brand-sub{
@@ -87,8 +106,8 @@ function isActive($file, $current) {
 
   .toggle-btn{
     border:1px solid var(--line);
-    background:rgba(58,36,24,.25);
-    color:#D5C4AE;
+    background:rgba(0,0,0,.24);
+    color:var(--text);
     border-radius:12px;
     width:38px;
     height:38px;
@@ -131,27 +150,35 @@ function isActive($file, $current) {
     border-radius:14px;
     border:1px solid transparent;
     text-decoration:none;
-    color:#D5C4AE;
+    color:var(--text);
     background:transparent;
     transition:.18s ease;
   }
 
   .side-link:hover{
-    background:rgba(58,36,24,.35);
+    background:rgba(255,255,255,.035);
     border-color:var(--line);
   }
 
   .side-link.active{
-    background:rgba(168,132,98,.12);
-    border-color:rgba(168,132,98,.35);
+    background:rgba(107,127,103,.16);
+    border-color:rgba(107,127,103,.42);
     color:var(--accent);
   }
 
   .nav-icon{
     width:22px;
     text-align:center;
-    font-size:16px;
+    display:grid;
+    place-items:center;
+    color:var(--muted);
     flex-shrink:0;
+  }
+
+  .icon-svg{
+    display:block;
+    width:19px;
+    height:19px;
   }
 
   .nav-label{
@@ -175,13 +202,13 @@ function isActive($file, $current) {
     margin-top:18px;
     padding:12px;
     border-radius:14px;
-    background:rgba(58,36,24,.25);
+    background:rgba(0,0,0,.24);
     border:1px solid var(--line);
   }
 
   .user-name{
     font-weight:800;
-    color:#D5C4AE;
+    color:var(--text);
     font-size:14px;
   }
 
@@ -262,76 +289,76 @@ function isActive($file, $current) {
           <div class="brand-sub">Sistema académico</div>
         </div>
       </div>
-      <button class="toggle-btn" type="button" onclick="toggleSidebar()">☰</button>
+      <button class="toggle-btn" type="button" onclick="toggleSidebar()" aria-label="Abrir o cerrar menú"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
     </div>
 
     <div class="sidebar-section">
       <p class="section-title">Navegación</p>
       <nav class="side-nav">
         <a class="side-link <?= isActive('dashboard.php', $current) ?>" href="dashboard.php">
-          <span class="nav-icon">🏠</span>
+          <span class="nav-icon"><?= sidebarIcon('dashboard') ?></span>
           <span class="nav-label">Dashboard</span>
         </a>
 
         <a class="side-link <?= isActive('students.php', $current) || isActive('student_form.php', $current) || isActive('student_profile.php', $current) || isActive('student_status.php', $current) || isActive('student_letter.php', $current) ?>" href="students.php">
-          <span class="nav-icon">🎓</span>
+          <span class="nav-icon"><?= sidebarIcon('students') ?></span>
           <span class="nav-label">Estudiantes</span>
         </a>
 
         <a class="side-link <?= isActive('groups.php', $current) || isActive('group_new.php', $current) || isActive('group_students.php', $current) || isActive('group_profile.php', $current) || isActive('group_report.php', $current) ?>" href="groups.php">
-          <span class="nav-icon">🧩</span>
+          <span class="nav-icon"><?= sidebarIcon('groups') ?></span>
           <span class="nav-label">Grupos</span>
         </a>
 
         <a class="side-link <?= isActive('attendance.php', $current) || isActive('attendance_history.php', $current) || isActive('attendance_view.php', $current) ?>" href="attendance_history.php">
-          <span class="nav-icon">📝</span>
+          <span class="nav-icon"><?= sidebarIcon('attendance') ?></span>
           <span class="nav-label">Asistencias</span>
         </a>
 
         <a class="side-link <?= isActive('grades.php', $current) ?>" href="grades.php">
-          <span class="nav-icon">📊</span>
+          <span class="nav-icon"><?= sidebarIcon('grades') ?></span>
           <span class="nav-label">Notas</span>
         </a>
 
         <?php if (($me['role'] ?? '') === 'admin'): ?>
           <a class="side-link <?= isActive('teachers.php', $current) || isActive('teacher_new.php', $current) || isActive('teacher_reset.php', $current) || isActive('teacher_profile.php', $current) ?>" href="teachers.php">
-            <span class="nav-icon">👨‍🏫</span>
+            <span class="nav-icon"><?= sidebarIcon('teachers') ?></span>
             <span class="nav-label">Docentes</span>
           </a>
         <?php endif; ?>
 
         <a class="side-link <?= isActive('students_historical.php', $current) ?>" href="students_historical.php">
-  <span class="nav-icon">🗂️</span>
+  <span class="nav-icon"><?= sidebarIcon('history') ?></span>
   <span class="nav-label">Estudiantes históricos</span>
 </a>
 
 
         <a class="side-link <?= isActive('change_password.php', $current) ?>" href="change_password.php">
-          <span class="nav-icon">🔒</span>
+          <span class="nav-icon"><?= sidebarIcon('password') ?></span>
           <span class="nav-label">Contraseña</span>
         </a>
 
         <a class="side-link <?= isActive('activity_logs.php', $current) ?>" href="activity_logs.php">
-        <span class="nav-icon">📜</span>
+        <span class="nav-icon"><?= sidebarIcon('audit') ?></span>
         <span class="nav-label">Auditoría</span>
         </a>
         
         <?php if (($me['role'] ?? '') === 'admin'): ?>
           <a class="side-link <?= isActive('students_import.php', $current) ?>" href="students_import.php">
-            <span class="nav-icon">📥</span>
+            <span class="nav-icon"><?= sidebarIcon('import') ?></span>
             <span class="nav-label">Importar CSV</span>
           </a>
         <?php endif; ?>
 
         <a class="side-link <?= isActive('help.php', $current) ?>" href="help.php">
-          <span class="nav-icon">📘</span>
+          <span class="nav-icon"><?= sidebarIcon('help') ?></span>
           <span class="nav-label">Guía</span>
         </a>
 
         <form method="post" action="logout.php" style="margin:0;">
           <?= csrf_input() ?>
           <button class="side-link" type="submit" style="width:100%;border:0;text-align:left;cursor:pointer;font:inherit;color:inherit;">
-            <span class="nav-icon">🚪</span>
+            <span class="nav-icon"><?= sidebarIcon('logout') ?></span>
             <span class="nav-label">Salir</span>
           </button>
         </form>
@@ -350,5 +377,5 @@ function isActive($file, $current) {
         <img src="/docentes/frontend/images/1.png" alt="CONATRADEC">
         <span>CONATRADEC</span>
       </div>
-      <button class="toggle-btn" type="button" onclick="toggleSidebar()">☰</button>
+      <button class="toggle-btn" type="button" onclick="toggleSidebar()" aria-label="Abrir o cerrar menú"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
     </div>

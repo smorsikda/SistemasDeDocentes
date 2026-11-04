@@ -258,8 +258,8 @@ if (!$charLabels) {
       justify-content:center;
       padding:10px 14px;
       border-radius:14px;
-      background:linear-gradient(180deg,var(--green),var(--green2));
-      color:#06110a;
+      background:linear-gradient(180deg,var(--accent),var(--accent-dark));
+      color:var(--bg);
       font-weight:800;
       text-decoration:none;
       border:none;
@@ -272,9 +272,9 @@ if (!$charLabels) {
       justify-content:center;
       padding:10px 14px;
       border-radius:14px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
       font-weight:700;
       text-decoration:none;
       cursor:pointer;
@@ -292,7 +292,7 @@ if (!$charLabels) {
     }
 
     .card{
-      background:rgba(255,255,255,.05);
+      background:rgba(0,0,0,.24);
       border:1px solid var(--line);
       border-radius:14px;
       padding:14px;
@@ -310,7 +310,7 @@ if (!$charLabels) {
     }
 
     .chartBox{
-      background:rgba(255,255,255,.05);
+      background:rgba(0,0,0,.24);
       border:1px solid var(--line);
       border-radius:14px;
       padding:14px;
@@ -375,7 +375,7 @@ if (!$charLabels) {
 
     th{
       color:var(--muted);
-      background:rgba(255,255,255,.04);
+      background:rgba(255,255,255,.025);
     }
 
     .print-keep{

@@ -153,8 +153,8 @@ function levelLabel($l){
       margin:0;
       min-height:100vh;
       background:
-        radial-gradient(circle at top, rgba(47,191,113,.16), transparent 30%),
-        linear-gradient(180deg, #08110c, #0b1220);
+        radial-gradient(circle at top, rgba(107,127,103,.16), transparent 30%),
+        linear-gradient(180deg, #1E3A2E, #0F1F17);
       display:flex;
       align-items:center;
       justify-content:center;
@@ -204,7 +204,7 @@ function levelLabel($l){
       display:block;
       margin-bottom:8px;
       font-weight:700;
-      color:#e5e7eb;
+      color:#C7CBB8;
     }
 
     .field input{
@@ -219,8 +219,8 @@ function levelLabel($l){
     }
 
     .field input:focus{
-      border-color:rgba(47,191,113,.45);
-      box-shadow:0 0 0 3px rgba(47,191,113,.08);
+      border-color:rgba(107,127,103,.45);
+      box-shadow:0 0 0 3px rgba(107,127,103,.08);
     }
 
     .btn{
@@ -229,7 +229,7 @@ function levelLabel($l){
       border:none;
       padding:14px 18px;
       border-radius:14px;
-      background:linear-gradient(180deg,var(--green),var(--green2));
+      background:linear-gradient(180deg,var(--accent),var(--accent-dark));
       color:#06110a;
       font-weight:900;
       cursor:pointer;
@@ -249,18 +249,18 @@ function levelLabel($l){
       margin-top:18px;
       padding:16px;
       border-radius:16px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
     }
 
     .ok h3{
       margin:0 0 8px;
-      color:#d1fae5;
+      color:#C7CBB8;
     }
 
     .ok p{
       margin:6px 0;
-      color:#e5e7eb;
+      color:#C7CBB8;
     }
 
     .cert-list{
@@ -284,9 +284,9 @@ function levelLabel($l){
       margin-top:12px;
       padding:12px 16px;
       border-radius:12px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.16);
-      color:#d1fae5;
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.16);
+      color:#C7CBB8;
       font-weight:800;
       text-decoration:none;
     }

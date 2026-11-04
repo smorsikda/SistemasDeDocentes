@@ -129,9 +129,9 @@ foreach ($groups as $g) {
       justify-content:center;
       padding:8px 12px;
       border-radius:12px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
       font-weight:800;
       text-decoration:none;
       margin-right:6px;
@@ -161,9 +161,9 @@ foreach ($groups as $g) {
       justify-content:center;
       padding:8px 12px;
       border-radius:12px;
-      border:1px solid rgba(148,163,184,.25);
+      border:1px solid rgba(61,67,55,.25);
       background:rgba(255,255,255,.04);
-      color:#cbd5e1;
+      color:#C7CBB8;
       font-weight:700;
       margin-right:6px;
       margin-bottom:6px;
@@ -179,8 +179,8 @@ foreach ($groups as $g) {
     }
 
     .activo{
-      border-color:rgba(47,191,113,.45);
-      color:var(--green);
+      border-color:rgba(107,127,103,.45);
+      color:var(--accent);
     }
 
     .finalizado{
@@ -189,17 +189,17 @@ foreach ($groups as $g) {
     }
 
     .cancelado{
-      border-color:rgba(148,163,184,.45);
-      color:#cbd5e1;
+      border-color:rgba(61,67,55,.45);
+      color:#C7CBB8;
     }
 
     .ok-msg{
       margin-top:14px;
       padding:12px 14px;
       border-radius:12px;
-      background:rgba(47,191,113,.10);
-      border:1px solid rgba(47,191,113,.35);
-      color:var(--green);
+      background:rgba(107,127,103,.10);
+      border:1px solid rgba(107,127,103,.35);
+      color:var(--accent);
       font-weight:700;
     }
 
@@ -223,7 +223,7 @@ foreach ($groups as $g) {
       border-radius:999px;
       background:rgba(255,255,255,.05);
       border:1px solid var(--line);
-      color:#e5e7eb;
+      color:#C7CBB8;
       font-size:13px;
       font-weight:700;
     }

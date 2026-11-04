@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <?php endif; ?>
 
       <?php if ($success): ?>
-        <div style="margin-top:12px;padding:12px;border-radius:14px;border:1px solid rgba(47,191,113,.35);background:rgba(47,191,113,.10);">
+        <div style="margin-top:12px;padding:12px;border-radius:14px;border:1px solid rgba(107,127,103,.35);background:rgba(107,127,103,.10);">
           <?= h($success) ?><br><br>
           <a class="btnS" href="index.php">Ir al login</a>
         </div>

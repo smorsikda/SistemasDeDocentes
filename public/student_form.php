@@ -546,22 +546,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     .container{padding:26px;max-width:1080px;width:100%;margin:0 auto;}
-    .panel{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
+    .panel{background:linear-gradient(145deg,rgba(30,58,46,.96),rgba(15,31,23,.96));border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);}
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;}
     .col4{grid-column:span 4}
     .col6{grid-column:span 6}
     .col8{grid-column:span 8}
     .col12{grid-column:span 12}
     @media(max-width:860px){.col4,.col6,.col8{grid-column:span 12}}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
     .btnS,.btnG{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:14px;font-weight:800;text-decoration:none;cursor:pointer;}
-    .btnS{border:1px solid rgba(47,191,113,.35);background:rgba(47,191,113,.10);color:var(--green);}
-    .btnG{border:1px solid rgba(148,163,184,.25);background:rgba(255,255,255,.05);color:#cbd5e1;}
+    .btnS{border:1px solid rgba(107,127,103,.55);background:rgba(107,127,103,.18);color:var(--text);}
+    .btnG{border:1px solid rgba(61,67,55,.9);background:rgba(61,67,55,.45);color:var(--text);}
     textarea{resize:vertical}
     .hint{font-size:12px;color:var(--muted);margin-top:6px}
     .hero{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:12px;}
-    .info-box{margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted);line-height:1.6;font-size:14px;}
-    .readonly-box{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#e5e7eb;font-weight:700;min-height:46px;display:flex;align-items:center;}
+    .info-box{margin-top:16px;padding:12px 14px;border-radius:12px;background:rgba(61,67,55,.34);border:1px solid var(--line);color:var(--muted);line-height:1.6;font-size:14px;}
+    .readonly-box{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(61,67,55,.34);color:var(--text);font-weight:700;min-height:46px;display:flex;align-items:center;}
+    .wizard-intro{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin:20px 0 8px;padding:18px;border:1px solid var(--line);border-radius:16px;background:rgba(15,31,23,.52);}
+    .wizard-step-count{margin:0 0 6px;color:#C7CBB8;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;}
+    .wizard-step-title{margin:0;font-size:20px;color:var(--text);}
+    .wizard-step-description{margin:6px 0 0;color:var(--muted);font-size:13px;}
+    .wizard-progress{min-width:min(360px,45%);align-self:center;}
+    .wizard-progress-track{height:7px;border-radius:999px;background:#3D4337;overflow:hidden;}
+    .wizard-progress-value{display:block;height:100%;width:25%;border-radius:inherit;background:linear-gradient(90deg,#6B7F67,#C7CBB8);transition:width .25s ease;}
+    .wizard-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0 0;padding:0;list-style:none;}
+    .wizard-step-marker{display:flex;align-items:center;gap:6px;color:rgba(199,203,184,.5);font-size:11px;white-space:nowrap;}
+    .wizard-step-marker span:first-child{display:grid;place-items:center;width:22px;height:22px;border:1px solid #3D4337;border-radius:50%;font-weight:800;}
+    .wizard-step-marker[aria-current="step"]{color:var(--text);}
+    .wizard-step-marker[aria-current="step"] span:first-child,.wizard-step-marker.is-complete span:first-child{border-color:#6B7F67;background:#3E5A3F;color:#C7CBB8;}
+    .field[data-wizard-step][hidden]{display:none!important;}
+    .wizard-navigation{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line);}
+    .wizard-navigation-group{display:flex;gap:10px;flex-wrap:wrap;}
+    .wizard-navigation [hidden]{display:none!important;}
+    .wizard-navigation .btn{width:auto;margin:0;min-width:138px;}
+    .wizard-navigation .btnS,.wizard-navigation .btnG{min-width:110px;}
+    @media(max-width:700px){.container{padding:16px 12px}.panel{padding:16px}.wizard-intro{display:block}.wizard-progress{min-width:0;margin-top:18px}.wizard-step-marker{justify-content:center}.wizard-step-marker .wizard-step-name{display:none}.wizard-navigation{align-items:stretch;flex-direction:column}.wizard-navigation-group{width:100%}.wizard-navigation .btn,.wizard-navigation .btnS,.wizard-navigation .btnG{flex:1;min-width:0}.wizard-utility-actions{display:grid!important;grid-template-columns:1fr 1fr}}
   </style>
 </head>
 <body>
@@ -580,13 +599,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="alert" style="margin-top:12px;"><?= h($error) ?></div>
     <?php endif; ?>
 
-    <form method="post" style="margin-top:12px;">
+    <form id="studentWizard" method="post" style="margin-top:12px;" novalidate>
       <?= csrf_input(); ?>
+
+      <div class="wizard-intro">
+        <div>
+          <p class="wizard-step-count" id="wizardStepCount" aria-live="polite"></p>
+          <h3 class="wizard-step-title" id="wizardStepTitle" tabindex="-1"></h3>
+          <p class="wizard-step-description" id="wizardStepDescription"></p>
+        </div>
+        <div class="wizard-progress" aria-label="Progreso del registro">
+          <div class="wizard-progress-track"><span class="wizard-progress-value" id="wizardProgressValue"></span></div>
+          <ol class="wizard-steps">
+            <li class="wizard-step-marker" data-step-marker="0"><span>1</span><span class="wizard-step-name">Personales</span></li>
+            <li class="wizard-step-marker" data-step-marker="1"><span>2</span><span class="wizard-step-name">Formación</span></li>
+            <li class="wizard-step-marker" data-step-marker="2"><span>3</span><span class="wizard-step-name">Ubicación</span></li>
+            <li class="wizard-step-marker" data-step-marker="3"><span>4</span><span class="wizard-step-name">Finalizar</span></li>
+          </ol>
+        </div>
+      </div>
 
       <div class="grid">
 
         <?php if (($me['role'] ?? '') === 'admin'): ?>
-          <div class="field col12">
+          <div class="field col12" data-wizard-step="0">
             <label for="teacher_id">Docente</label>
             <select name="teacher_id" id="teacher_id" required>
               <?php foreach($teachers as $t): ?>
@@ -598,19 +634,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </div>
         <?php endif; ?>
 
-        <div class="field col8">
+        <div class="field col8" data-wizard-step="0">
           <label for="full_name">Nombre completo *</label>
           <input id="full_name" name="full_name" value="<?= h($row['full_name']) ?>" required>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="0">
           <label>Código del estudiante</label>
           <div class="readonly-box">
             <?= $id > 0 ? h($row['student_code'] ?: 'Sin código') : 'Se generará automáticamente al guardar' ?>
           </div>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="0">
           <label for="sex">Sexo</label>
           <select name="sex" id="sex">
             <option value="">Seleccionar</option>
@@ -619,7 +655,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </select>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="0">
           <label for="education_level">Nivel escolar</label>
           <select name="education_level" id="education_level">
             <option value="">Seleccionar</option>
@@ -629,7 +665,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </select>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="0">
           <label for="nationality">Nacionalidad</label>
           <input
             type="text"
@@ -640,12 +676,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           >
         </div>
 
-        <div class="field col6">
+        <div class="field col6" data-wizard-step="0">
           <label for="profession">Profesión</label>
           <input id="profession" name="profession" value="<?= h($row['profession'] ?? '') ?>">
         </div>
 
-        <div class="field col6">
+        <div class="field col6" data-wizard-step="1">
           <label for="school_id">Escuela</label>
           <select name="school_id" id="school_id" required>
             <option value="">Seleccionar escuela</option>
@@ -657,7 +693,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </select>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="1">
           <label for="course_type">Tipo de curso</label>
           <select name="course_type" id="course_type">
             <option value="barismo" <?= ($row['course_type'] ?? '') === 'barismo' ? 'selected' : '' ?>>Barismo</option>
@@ -665,7 +701,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </select>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="1">
           <label for="course_level">Nivel</label>
           <select name="course_level" id="course_level">
             <option value="basico" <?= ($row['course_level'] ?? '') === 'basico' ? 'selected' : '' ?>>Básico</option>
@@ -674,18 +710,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </select>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="1">
           <label for="enrolled_at">Fecha de inscripción</label>
           <input type="date" id="enrolled_at" name="enrolled_at" value="<?= h($row['enrolled_at'] ?? '') ?>">
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="0">
           <label for="phone">Teléfono</label>
           <input id="phone" name="phone" value="<?= h($row['phone'] ?? '') ?>" placeholder="Ej: 88888888" maxlength="8" inputmode="numeric">
           <div class="hint">Debe tener exactamente 8 dígitos.</div>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="0">
           <label for="cedula">Cédula</label>
           <input
             id="cedula"
@@ -700,7 +736,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="hint">Debe tener exactamente 13 números y 1 letra.</div>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="2">
           <label for="departmentSelect">Departamento</label>
           <select name="department_id" id="departmentSelect">
             <option value="">Seleccionar departamento</option>
@@ -712,7 +748,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </select>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="2">
           <label for="municipalitySelect">Municipio</label>
           <select name="municipality" id="municipalitySelect" data-selected="<?= h($row['municipality'] ?? '') ?>">
             <option value="">Seleccionar municipio</option>
@@ -720,12 +756,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="hint">Seleccioná primero el departamento y luego el municipio.</div>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="2">
           <label for="community">Comunidad</label>
           <input id="community" name="community" value="<?= h($row['community'] ?? '') ?>">
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="2">
           <label for="organization_type">Tipo de organización</label>
           <select name="organization_type" id="organization_type">
             <option value="">Seleccionar</option>
@@ -737,22 +773,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </select>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="2">
           <label for="organization_name">Nombre de organización</label>
           <input id="organization_name" name="organization_name" value="<?= h($row['organization_name'] ?? '') ?>">
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="2">
           <label for="organization_phone">Teléfono de la organización</label>
           <input id="organization_phone" name="organization_phone" value="<?= h($row['organization_phone'] ?? '') ?>" placeholder="Ej: 88888888" maxlength="8" inputmode="numeric">
         </div>
 
-        <div class="field col6">
+        <div class="field col6" data-wizard-step="2">
           <label for="organization_location">Ubicación de la organización</label>
           <input id="organization_location" name="organization_location" value="<?= h($row['organization_location'] ?? '') ?>">
         </div>
 
-        <div class="field col6">
+        <div class="field col6" data-wizard-step="2">
           <label for="characterization">Caracterización</label>
           <select name="characterization" id="characterization">
             <option value="">Seleccionar</option>
@@ -764,7 +800,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </select>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="2">
           <label for="trademark_registration">Registro de marca</label>
           <select name="trademark_registration" id="trademark_registration">
             <option value="">Seleccionar</option>
@@ -773,37 +809,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </select>
         </div>
 
-        <div class="field col4">
+        <div class="field col4" data-wizard-step="2">
           <label for="number_of_members">Número de socios</label>
           <input type="number" min="0" id="number_of_members" name="number_of_members" value="<?= h($row['number_of_members'] ?? '') ?>">
         </div>
 
-        <div class="field col12">
+        <div class="field col12" data-wizard-step="3">
           <label for="course_purpose">Propósito del curso</label>
           <textarea id="course_purpose" name="course_purpose" rows="3"><?= h($row['course_purpose'] ?? '') ?></textarea>
         </div>
 
-        <div class="field col12">
+        <div class="field col12" data-wizard-step="3">
           <label for="future_projection">Proyección a futuro</label>
           <textarea id="future_projection" name="future_projection" rows="3"><?= h($row['future_projection'] ?? '') ?></textarea>
         </div>
 
-        <div class="field col12">
+        <div class="field col12" data-wizard-step="3">
           <label for="observations">Observaciones</label>
           <textarea id="observations" name="observations" rows="4"><?= h($row['observations'] ?? '') ?></textarea>
         </div>
 
-        <div class="field col12">
+        <div class="field col12" data-wizard-step="3">
           <label for="notes">Notas internas</label>
           <textarea id="notes" name="notes" rows="3"><?= h($row['notes'] ?? '') ?></textarea>
         </div>
 
       </div>
 
-      <div class="actions">
-        <button class="btn" type="submit"><?= $id > 0 ? 'Guardar cambios' : 'Crear estudiante' ?></button>
-        <a class="btnS" href="students.php">← Cancelar</a>
-        <a class="btnG" href="dashboard.php">Ir al dashboard</a>
+      <div class="wizard-navigation">
+        <div class="wizard-navigation-group">
+          <button class="btnG" id="wizardPrevious" type="button" hidden>← Anterior</button>
+          <button class="btnS" id="wizardNext" type="button">Siguiente →</button>
+          <button class="btn" id="wizardSubmit" type="submit" hidden><?= $id > 0 ? 'Guardar cambios' : 'Crear estudiante' ?></button>
+        </div>
+        <div class="wizard-navigation-group wizard-utility-actions">
+          <a class="btnS" href="students.php">Cancelar</a>
+          <a class="btnG" href="dashboard.php">Ir al dashboard</a>
+        </div>
       </div>
     </form>
 
@@ -832,9 +874,22 @@ function loadMunicipalities() {
   const depId = parseInt(depSelect.value || '0', 10);
 
   muniSelect.innerHTML = '<option value="">Seleccionar municipio</option>';
+  muniSelect.disabled = true;
 
-  if (depId && municipiosPorDepartamento[depId]) {
-    municipiosPorDepartamento[depId].forEach(function(muni) {
+  if (!depId) {
+    muniSelect.options[0].textContent = 'Selecciona primero un departamento';
+    return;
+  }
+
+  const municipios = municipiosPorDepartamento[String(depId)] || [];
+  if (municipios.length === 0) {
+    muniSelect.options[0].textContent = 'No hay municipios registrados para este departamento';
+    return;
+  }
+
+  muniSelect.options[0].textContent = 'Seleccionar municipio';
+  muniSelect.disabled = false;
+  municipios.forEach(function(muni) {
       const opt = document.createElement('option');
       opt.value = muni.name;
       opt.textContent = muni.name;
@@ -842,8 +897,7 @@ function loadMunicipalities() {
         opt.selected = true;
       }
       muniSelect.appendChild(opt);
-    });
-  }
+  });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -854,6 +908,99 @@ document.addEventListener('DOMContentLoaded', function() {
     muniSelect.dataset.selected = '';
     loadMunicipalities();
   });
+
+  const wizardForm = document.getElementById('studentWizard');
+  if (wizardForm) {
+    const steps = [
+      { title: 'Datos personales', description: 'Identifica al estudiante y agrega sus datos personales y de contacto.' },
+      { title: 'Formación académica', description: 'Selecciona la escuela, el curso y la fecha de inscripción.' },
+      { title: 'Ubicación y organización', description: 'Completa la ubicación del estudiante y los datos de su organización.' },
+      { title: 'Información adicional', description: 'Agrega el propósito, las proyecciones y cualquier observación.' }
+    ];
+    const fields = Array.from(wizardForm.querySelectorAll('.field[data-wizard-step]'));
+    const stepCount = document.getElementById('wizardStepCount');
+    const stepTitle = document.getElementById('wizardStepTitle');
+    const stepDescription = document.getElementById('wizardStepDescription');
+    const progressValue = document.getElementById('wizardProgressValue');
+    const previousButton = document.getElementById('wizardPrevious');
+    const nextButton = document.getElementById('wizardNext');
+    const submitButton = document.getElementById('wizardSubmit');
+    let currentStep = 0;
+
+    function showStep(stepIndex, shouldScroll) {
+      currentStep = Math.max(0, Math.min(stepIndex, steps.length - 1));
+      fields.forEach(function(field) {
+        field.hidden = Number(field.dataset.wizardStep) !== currentStep;
+      });
+
+      const step = steps[currentStep];
+      stepCount.textContent = 'Paso ' + (currentStep + 1) + ' de ' + steps.length;
+      stepTitle.textContent = step.title;
+      stepDescription.textContent = step.description;
+      progressValue.style.width = (((currentStep + 1) / steps.length) * 100) + '%';
+      previousButton.hidden = currentStep === 0;
+      nextButton.hidden = currentStep === steps.length - 1;
+      submitButton.hidden = currentStep !== steps.length - 1;
+
+      wizardForm.querySelectorAll('[data-step-marker]').forEach(function(marker) {
+        const markerStep = Number(marker.dataset.stepMarker);
+        marker.classList.toggle('is-complete', markerStep < currentStep);
+        if (markerStep === currentStep) {
+          marker.setAttribute('aria-current', 'step');
+        } else {
+          marker.removeAttribute('aria-current');
+        }
+      });
+
+      if (shouldScroll) {
+        stepTitle.focus({ preventScroll: true });
+        document.querySelector('.wizard-intro').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function validateStep(stepIndex) {
+      const controls = fields
+        .filter(function(field) { return Number(field.dataset.wizardStep) === stepIndex; })
+        .flatMap(function(field) { return Array.from(field.querySelectorAll('input, select, textarea')); });
+
+      const invalidControl = controls.find(function(control) {
+        return !control.disabled && !control.checkValidity();
+      });
+
+      if (invalidControl) {
+        invalidControl.reportValidity();
+        invalidControl.focus();
+        return false;
+      }
+      return true;
+    }
+
+    nextButton.addEventListener('click', function() {
+      if (validateStep(currentStep)) showStep(currentStep + 1, true);
+    });
+
+    previousButton.addEventListener('click', function() {
+      showStep(currentStep - 1, true);
+    });
+
+    wizardForm.addEventListener('submit', function(event) {
+      const invalidControl = Array.from(wizardForm.querySelectorAll('input, select, textarea')).find(function(control) {
+        return !control.disabled && !control.checkValidity();
+      });
+
+      if (invalidControl) {
+        event.preventDefault();
+        const invalidField = invalidControl.closest('.field[data-wizard-step]');
+        if (invalidField) showStep(Number(invalidField.dataset.wizardStep), true);
+        window.requestAnimationFrame(function() {
+          invalidControl.reportValidity();
+          invalidControl.focus();
+        });
+      }
+    });
+
+    showStep(0, false);
+  }
 
   const cedulaInput = document.getElementById('cedula');
   if (cedulaInput) {
