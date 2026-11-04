@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '/../app/helpers/session.php';
+require __DIR__ . '/../backend/helpers/session.php';
 start_app_session();
-require __DIR__ . '/../app/config/db.php';
+require __DIR__ . '/../backend/config/db.php';
 
 header('Cache-Control: no-store, private');
 header('Referrer-Policy: no-referrer');
@@ -147,7 +147,7 @@ function levelLabel($l){
 <head>
   <meta charset="utf-8">
   <title>Descargar certificado</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     body{
       margin:0;
@@ -302,7 +302,7 @@ function levelLabel($l){
 <body>
   <section class="card">
     <div class="brand">
-      <img src="/docentes/assets/images/1.png" alt="CONATRADEC">
+      <img src="/docentes/frontend/images/1.png" alt="CONATRADEC">
       <div>
         <h1>Descargar certificado</h1>
         <p class="sub">Ingresá tu código de estudiante para consultar tus certificados disponibles.</p>

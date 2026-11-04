@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../app/helpers/csrf.php';
+require_once __DIR__ . '/../../backend/helpers/csrf.php';
 
 $me = $_SESSION['user'] ?? null;
 $current = basename($_SERVER['PHP_SELF'] ?? '');
@@ -256,7 +256,7 @@ function isActive($file, $current) {
   <aside class="sidebar" id="appSidebar">
     <div class="sidebar-top">
       <div class="brand">
-        <img src="/docentes/assets/images/1.png" alt="CONATRADEC">
+        <img src="/docentes/frontend/images/1.png" alt="CONATRADEC">
         <div class="brand-text">
           <div class="brand-title">CONATRADEC</div>
           <div class="brand-sub">Sistema académico</div>
@@ -347,7 +347,7 @@ function isActive($file, $current) {
   <div class="content-area">
     <div class="mobile-topbar">
       <div class="mobile-brand">
-        <img src="/docentes/assets/images/1.png" alt="CONATRADEC">
+        <img src="/docentes/frontend/images/1.png" alt="CONATRADEC">
         <span>CONATRADEC</span>
       </div>
       <button class="toggle-btn" type="button" onclick="toggleSidebar()">☰</button>

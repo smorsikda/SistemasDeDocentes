@@ -18,7 +18,7 @@ No se requiere Composer ni Node.js.
 1. Copia el proyecto a `C:\xampp\htdocs\docentes`.
 2. Inicia Apache y MySQL/MariaDB en XAMPP.
 3. Importa `sql/schema1.sql` en phpMyAdmin.
-4. Copia `app/config/db.local.example.php` como `app/config/db.local.php` y configura el puerto, usuario y contraseña de tu instalación.
+4. Copia `backend/config/db.local.example.php` como `backend/config/db.local.php` y configura el puerto, usuario y contraseña de tu instalación.
 5. Abre `http://localhost/docentes/public/`.
 
 Si Dolibarr usa el puerto 80 o 3306, configura Apache/MySQL de XAMPP en otros puertos y actualiza `db.local.php` con el puerto real de MariaDB.
@@ -113,13 +113,13 @@ Configura un servicio web para PHP y un servicio privado MySQL con disco persist
 
 Render despliega la app desde el repositorio y construye el Dockerfile. `compose.yaml` es solo para desarrollo local; la base de datos alojada se crea como servicio privado independiente con disco persistente. En Render selecciona **After CI Checks Pass** como política de Auto-Deploy para que espere el resultado de GitHub Actions antes de desplegar los cambios de `main`.
 
-No subas `.env`, contraseñas, datos personales ni `app/config/db.local.php` al repositorio. Guarda las credenciales en Variables de Render, nunca en el código.
+No subas `.env`, contraseñas, datos personales ni `backend/config/db.local.php` al repositorio. Guarda las credenciales en Variables de Render, nunca en el código.
 
 ## Estructura del proyecto
 
 ```text
-app/                 Configuración, helpers y middleware PHP
-assets/              CSS, imágenes y recursos del frontend
+backend/             Configuración, helpers y middleware PHP
+frontend/           CSS, imágenes y componentes compartidos del frontend
 public/              Páginas públicas y endpoints PHP
 sql/                 Esquema inicial y migraciones
 docker/              Configuración auxiliar de la imagen PHP/Apache

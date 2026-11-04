@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -150,7 +150,7 @@ $groupAverage = $countFinalGrades > 0 ? round($sumFinalGrades / $countFinalGrade
 <head>
   <meta charset="utf-8">
   <title>Reporte consolidado del grupo</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     .container{
       padding:26px;
@@ -562,13 +562,13 @@ $groupAverage = $countFinalGrades > 0 ? round($sumFinalGrades / $countFinalGrade
   </style>
 </head>
 <body>
-<?php require __DIR__ . '/partials/sidebar.php'; ?>
+<?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
 
 <main class="container">
   <section class="panel">
    <div class="hero">
   <div class="hero-left">
-    <img src="/docentes/assets/images/1.png" class="report-logo" alt="CONATRADEC">
+    <img src="/docentes/frontend/images/1.png" class="report-logo" alt="CONATRADEC">
 
     <div>
       <h2 style="margin:0 0 4px;">Reporte consolidado del grupo</h2>

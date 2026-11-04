@@ -8,7 +8,7 @@ Esta guía sirve para configurar y comprobar el despliegue de Sistema de Docente
 - [ ] Confirmar que la rama `main` contiene la versión que se quiere desplegar.
 - [ ] Crear en Render un servicio privado para MySQL y un Web Service para la aplicación.
 - [ ] Tener disponible un cliente MySQL para importar el esquema inicial.
-- [ ] Revisar `README.md`, `Dockerfile`, `compose.yaml`, `docker/apache-entrypoint.sh`, `public/health.php`, `.github/workflows/docker-ci.yml`, `app/config/db.php` y `sql/schema1.sql` antes de aplicar cambios operativos.
+- [ ] Revisar `README.md`, `Dockerfile`, `compose.yaml`, `docker/apache-entrypoint.sh`, `public/health.php`, `.github/workflows/docker-ci.yml`, `backend/config/db.php` y `sql/schema1.sql` antes de aplicar cambios operativos.
 
 ## 2. Crear y configurar la base de datos
 
@@ -39,7 +39,7 @@ En la configuración del Web Service, agregar las variables siguientes. Los valo
 | `DOCENTES_DB_USER` | Usuario de aplicación autorizado para esa base. |
 | `DOCENTES_DB_PASSWORD` | Contraseña de ese usuario. |
 
-`app/config/db.php` lee estas variables de entorno y las utiliza para crear la conexión PDO. Si falta una variable, el archivo conserva valores locales predeterminados; en Render, configura las cinco explícitamente para evitar depender de esos valores.
+`backend/config/db.php` lee estas variables de entorno y las utiliza para crear la conexión PDO. Si falta una variable, el archivo conserva valores locales predeterminados; en Render, configura las cinco explícitamente para evitar depender de esos valores.
 
 ## 5. Inicializar el esquema
 

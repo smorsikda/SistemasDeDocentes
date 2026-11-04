@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Acceso denegado</title>
 
-<link rel="stylesheet" href="/docentes/assets/css/app.css">
+<link rel="stylesheet" href="/docentes/frontend/css/app.css">
 
 <style>
 body{
@@ -52,7 +52,7 @@ text-decoration:none;
 
 <div class="card">
 
-<img src="/docentes/assets/images/1.png" width="60">
+<img src="/docentes/frontend/images/1.png" width="60">
 
 <h1>No tienes acceso</h1>
 

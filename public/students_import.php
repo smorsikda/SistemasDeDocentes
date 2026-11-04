@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
-require __DIR__ . '/../app/helpers/csrf.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
+require __DIR__ . '/../backend/helpers/csrf.php';
 
 
 requireLogin();
@@ -580,7 +580,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'impor
 <head>
   <meta charset="utf-8">
   <title>Importar estudiantes CSV</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     .container{padding:26px;max-width:1380px;width:100%;margin:0 auto;}
     .panel{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
@@ -608,7 +608,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'impor
   </style>
 </head>
 <body>
-<?php require __DIR__ . '/partials/sidebar.php'; ?>
+<?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
 
 <main class="container">
   <section class="panel">

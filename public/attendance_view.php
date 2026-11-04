@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -89,7 +89,7 @@ $totalStudents = count($items);
 <head>
   <meta charset="utf-8">
   <title>Detalle de asistencia</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     .container{
       padding:26px;
@@ -604,7 +604,7 @@ $totalStudents = count($items);
   </style>
 </head>
 <body>
-<?php require __DIR__ . '/partials/sidebar.php'; ?>
+<?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
 
 <main class="container">
   <section class="sheet">
@@ -612,7 +612,7 @@ $totalStudents = count($items);
     <div class="head">
       <div class="brand-row">
         <div class="brand">
-          <img src="/docentes/assets/images/1.png" alt="Logo CONATRADEC">
+          <img src="/docentes/frontend/images/1.png" alt="Logo CONATRADEC">
           <div class="brand-text">
             <h2>Detalle de asistencia</h2>
             <p>Registro oficial de presencia por grupo y fecha.</p>

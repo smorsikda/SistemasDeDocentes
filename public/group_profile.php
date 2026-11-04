@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -164,7 +164,7 @@ $lastAttendances = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
 <meta charset="utf-8">
 <title>Perfil del grupo</title>
-<link rel="stylesheet" href="/docentes/assets/css/app.css">
+<link rel="stylesheet" href="/docentes/frontend/css/app.css">
 
 <style>
 .container{
@@ -375,7 +375,7 @@ tr:hover{
 </head>
 
 <body>
-<?php require __DIR__ . '/partials/sidebar.php'; ?>
+<?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
 
 <main class="container">
 <section class="panel">

@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -197,7 +197,7 @@ $overallAcademicAverage = $averageCount > 0 ? round($averageSum / $averageCount,
 <head>
   <meta charset="utf-8">
   <title>Expediente • <?= h($s['full_name']) ?></title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     .container{
       padding:26px;
@@ -429,7 +429,7 @@ $overallAcademicAverage = $averageCount > 0 ? round($averageSum / $averageCount,
   </style>
 </head>
 <body>
-<?php require __DIR__ . '/partials/sidebar.php'; ?>
+<?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
 
 <main class="container">
   <section class="panel">

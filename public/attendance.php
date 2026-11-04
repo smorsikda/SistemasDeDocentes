@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
-require __DIR__ . '/../app/helpers/csrf.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
+require __DIR__ . '/../backend/helpers/csrf.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -149,7 +149,7 @@ if ($attendanceId > 0) {
 <head>
   <meta charset="utf-8">
   <title>Asistencia</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     .container{padding:26px;max-width:1180px;width:100%;margin:0 auto}
     .sheet{background:#ffffff;color:#111827;border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.25);overflow:hidden}
@@ -198,13 +198,13 @@ if ($attendanceId > 0) {
   </style>
 </head>
 <body>
-<?php require __DIR__ . '/partials/sidebar.php'; ?>
+<?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
 
 <main class="container">
   <section class="sheet">
     <div class="sheet-head">
       <div class="sheet-brand">
-        <img src="/docentes/assets/images/1.png" alt="Logo CONATRADEC">
+        <img src="/docentes/frontend/images/1.png" alt="Logo CONATRADEC">
         <h2>Hoja de Asistencia</h2>
 
         <div class="meta">

@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '/../app/helpers/session.php';
+require __DIR__ . '/../backend/helpers/session.php';
 start_app_session();
-require __DIR__ . '/../app/config/db.php';
+require __DIR__ . '/../backend/config/db.php';
 
 header('Cache-Control: no-store, private');
 header('Referrer-Policy: no-referrer');
@@ -81,10 +81,10 @@ function levelLabel($l){
 
 $certificateNumber = 'CERT-' . date('Y') . '-' . str_pad((string)$student['id'], 5, '0', STR_PAD_LEFT) . '-' . str_pad((string)$groupId, 4, '0', STR_PAD_LEFT);
 
-$logoGob = '/docentes/assets/images/grun.png';
-$logoSnpcc = '/docentes/assets/images/SNPCC.png';
-$logoCona = '/docentes/assets/images/conatradec.png';
-$signatureImage = '/docentes/assets/images/firma.png';
+$logoGob = '/docentes/frontend/images/grun.png';
+$logoSnpcc = '/docentes/frontend/images/SNPCC.png';
+$logoCona = '/docentes/frontend/images/conatradec.png';
+$signatureImage = '/docentes/frontend/images/firma.png';
 
 $schoolName = trim((string)($student['school_name'] ?? ''));
 if ($schoolName === '') {

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/../app/config/db.php';
+require __DIR__ . '/../backend/config/db.php';
 
 try {
     $pdo->query('SELECT 1');

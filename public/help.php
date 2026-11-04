@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../backend/middleware/auth.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -12,7 +12,7 @@ function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 <head>
   <meta charset="utf-8">
   <title>Guía rápida</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     .app{min-height:100vh;display:flex;flex-direction:column}
     .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;background:rgba(0,0,0,.35);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
@@ -50,7 +50,7 @@ function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
   </style>
 </head>
 <body>
-  <?php require __DIR__ . '/partials/sidebar.php'; ?>
+  <?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
     </header>
 
     <main class="container">

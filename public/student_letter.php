@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -87,7 +87,7 @@ $today_human = date('d/m/Y');
 <head>
   <meta charset="utf-8">
   <title>Constancia - <?= h($s['full_name']) ?></title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     :root{
       --paper:#ffffff;
@@ -278,7 +278,7 @@ $today_human = date('d/m/Y');
 
   <section class="paper">
     <div class="top">
-      <img src="/docentes/assets/images/1.png" alt="CONATRADEC">
+      <img src="/docentes/frontend/images/1.png" alt="CONATRADEC">
       <div>
         <h1>CONATRADEC</h1>
         <div class="sub">Registro Académico • Constancia</div>
