@@ -143,6 +143,8 @@ Configura un servicio web para PHP y un servicio privado MySQL con disco persist
    DOCENTES_DB_PASSWORD=<contraseña-segura>
    ```
 
+   Para una base MySQL-compatible externa con TLS obligatorio (por ejemplo, una instancia TiDB Cloud Starter de demostración), configura también `DOCENTES_DB_SSL=true`. TiDB Cloud Starter usa el puerto `4000`, no `3306`; copia host, puerto, base, usuario y contraseña desde su panel. El usuario de TiDB puede incluir un prefijo de cuenta. Mantén TLS activado y limita el acceso de red a las IP de salida de Render. La compatibilidad con TiDB debe validarse antes de usar datos reales.
+
 4. En la configuración avanzada del Web Service, usa `/docentes/public/health.php` como ruta de health check.
 5. Inicializa la base MySQL **una sola vez** en la instancia vacía importando `sql/schema1.sql`. El archivo contiene `DROP TABLE`; no lo ejecutes de nuevo sobre una base con información que quieras conservar.
 6. Activa el dominio público del Web Service. La aplicación conserva su prefijo de URL: abre `https://<servicio>.onrender.com/docentes/public/`.
