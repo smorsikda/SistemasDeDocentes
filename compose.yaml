@@ -1,0 +1,39 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${APP_PORT:-8080}:80"
+    environment:
+      PORT: "80"
+      DOCENTES_DB_HOST: db
+      DOCENTES_DB_PORT: "3306"
+      DOCENTES_DB_NAME: ${MARIADB_DATABASE:-docentes1_db}
+      DOCENTES_DB_USER: ${MARIADB_USER:-docentes_app}
+      DOCENTES_DB_PASSWORD: ${MARIADB_PASSWORD:?Copia .env.example a .env y define MARIADB_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mariadb:10.11
+    environment:
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-docentes1_db}
+      MARIADB_USER: ${MARIADB_USER:-docentes_app}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:?Copia .env.example a .env y define MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:?Copia .env.example a .env y define MARIADB_ROOT_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./sql/schema1.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  mariadb_data:

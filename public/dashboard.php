@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -221,7 +221,7 @@ if (!$charLabels) {
 <head>
   <meta charset="utf-8">
   <title>Dashboard</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     .container{
@@ -258,8 +258,8 @@ if (!$charLabels) {
       justify-content:center;
       padding:10px 14px;
       border-radius:14px;
-      background:linear-gradient(180deg,var(--green),var(--green2));
-      color:#06110a;
+      background:linear-gradient(180deg,var(--accent),var(--accent-dark));
+      color:var(--bg);
       font-weight:800;
       text-decoration:none;
       border:none;
@@ -272,9 +272,9 @@ if (!$charLabels) {
       justify-content:center;
       padding:10px 14px;
       border-radius:14px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
       font-weight:700;
       text-decoration:none;
       cursor:pointer;
@@ -292,7 +292,7 @@ if (!$charLabels) {
     }
 
     .card{
-      background:rgba(255,255,255,.05);
+      background:rgba(0,0,0,.24);
       border:1px solid var(--line);
       border-radius:14px;
       padding:14px;
@@ -310,7 +310,7 @@ if (!$charLabels) {
     }
 
     .chartBox{
-      background:rgba(255,255,255,.05);
+      background:rgba(0,0,0,.24);
       border:1px solid var(--line);
       border-radius:14px;
       padding:14px;
@@ -375,7 +375,7 @@ if (!$charLabels) {
 
     th{
       color:var(--muted);
-      background:rgba(255,255,255,.04);
+      background:rgba(255,255,255,.025);
     }
 
     .print-keep{
@@ -497,7 +497,7 @@ if (!$charLabels) {
   </style>
 </head>
 <body>
-<?php require __DIR__ . '/partials/sidebar.php'; ?>
+<?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
 
 <main class="container" id="dashboardReport">
   <div class="grid">

@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
-require __DIR__ . '/../app/helpers/csrf.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
+require __DIR__ . '/../backend/helpers/csrf.php';
 
 $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'admin'");
 $adminCount = (int)$stmt->fetchColumn();
@@ -181,13 +181,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="utf-8">
   <title>Login | Docentes</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
 </head>
 <body>
   <div class="wrap">
     <div class="card">
       <div class="brand">
-        <img src="/docentes/assets/images/1.png" alt="CONATRADEC">
+        <img src="/docentes/frontend/images/1.png" alt="CONATRADEC">
         <div class="title">
           <h1 style="margin:0;font-size:18px;">CONATRADEC</h1>
           <p style="margin:4px 0 0;color:var(--muted);font-size:13px;">Sistema de Docentes</p>

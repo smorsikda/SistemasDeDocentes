@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/helpers/log.php';
-require __DIR__ . '/../app/helpers/csrf.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/helpers/log.php';
+require __DIR__ . '/../backend/helpers/csrf.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Allow: POST');

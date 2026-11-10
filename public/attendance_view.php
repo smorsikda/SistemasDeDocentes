@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -89,7 +89,7 @@ $totalStudents = count($items);
 <head>
   <meta charset="utf-8">
   <title>Detalle de asistencia</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     .container{
       padding:26px;
@@ -108,7 +108,7 @@ $totalStudents = count($items);
 
     .head{
       padding:24px 24px 12px;
-      border-bottom:1px solid #e5e7eb;
+      border-bottom:1px solid #C7CBB8;
     }
 
     .brand-row{
@@ -166,7 +166,7 @@ $totalStudents = count($items);
     .btnS{
       border:1px solid #bbf7d0;
       background:#ecfdf5;
-      color:#16a34a;
+      color:#3E5A3F;
     }
 
     .btnG{
@@ -177,7 +177,7 @@ $totalStudents = count($items);
 
     .btn2{
       border:none;
-      background:linear-gradient(180deg,#4ade80,#22c55e);
+      background:linear-gradient(180deg,#4ade80,#6B7F67);
       color:#052e16;
     }
 
@@ -187,7 +187,7 @@ $totalStudents = count($items);
       gap:10px 16px;
       margin-top:18px;
       padding:14px;
-      border:1px solid #e5e7eb;
+      border:1px solid #C7CBB8;
       border-radius:16px;
       background:#f9fafb;
     }
@@ -216,7 +216,7 @@ $totalStudents = count($items);
     .sum-card{
       border-radius:16px;
       padding:16px;
-      border:1px solid #e5e7eb;
+      border:1px solid #C7CBB8;
       background:#f9fafb;
     }
 
@@ -242,7 +242,7 @@ $totalStudents = count($items);
     }
 
     .sum-card.ok .v{
-      color:#166534;
+      color:#3E5A3F;
     }
 
     .sum-card.bad{
@@ -264,7 +264,7 @@ $totalStudents = count($items);
       border-collapse:separate;
       border-spacing:0;
       overflow:hidden;
-      border:1px solid #e5e7eb;
+      border:1px solid #C7CBB8;
       border-radius:16px;
       font-size:14px;
     }
@@ -281,7 +281,7 @@ $totalStudents = count($items);
 
     tbody td{
       padding:13px 14px;
-      border-top:1px solid #e5e7eb;
+      border-top:1px solid #C7CBB8;
       background:#fff;
       vertical-align:middle;
     }
@@ -320,7 +320,7 @@ $totalStudents = count($items);
 
     .status-badge.ok{
       background:#dcfce7;
-      color:#166534;
+      color:#3E5A3F;
       border-color:#86efac;
     }
 
@@ -604,7 +604,7 @@ $totalStudents = count($items);
   </style>
 </head>
 <body>
-<?php require __DIR__ . '/partials/sidebar.php'; ?>
+<?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
 
 <main class="container">
   <section class="sheet">
@@ -612,7 +612,7 @@ $totalStudents = count($items);
     <div class="head">
       <div class="brand-row">
         <div class="brand">
-          <img src="/docentes/assets/images/1.png" alt="Logo CONATRADEC">
+          <img src="/docentes/frontend/images/1.png" alt="Logo CONATRADEC">
           <div class="brand-text">
             <h2>Detalle de asistencia</h2>
             <p>Registro oficial de presencia por grupo y fecha.</p>

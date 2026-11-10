@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
 
 requireRole('admin');
 requirePasswordChangeIfNeeded();
@@ -99,7 +99,7 @@ $totalSuccessLogins = (int)$loginSuccessStmt->fetchColumn();
 <head>
   <meta charset="utf-8">
   <title>Auditoría del sistema</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     .container{
       padding:26px;
@@ -151,7 +151,7 @@ $totalSuccessLogins = (int)$loginSuccessStmt->fetchColumn();
       font-size:26px;
       font-weight:900;
       margin-top:6px;
-      color:#e5e7eb;
+      color:#C7CBB8;
     }
 
     .filters{
@@ -204,7 +204,7 @@ $totalSuccessLogins = (int)$loginSuccessStmt->fetchColumn();
 
     .user-name{
       font-weight:800;
-      color:#e5e7eb;
+      color:#C7CBB8;
     }
 
     .small{
@@ -224,13 +224,13 @@ $totalSuccessLogins = (int)$loginSuccessStmt->fetchColumn();
       font-size:12px;
       font-weight:800;
       background:rgba(255,255,255,.04);
-      color:#e5e7eb;
+      color:#C7CBB8;
     }
 
     .pill.success{
-      border-color:rgba(34,197,94,.35);
-      color:#22c55e;
-      background:rgba(34,197,94,.10);
+      border-color:rgba(107,127,103,.35);
+      color:#6B7F67;
+      background:rgba(107,127,103,.10);
     }
 
     .pill.danger{
@@ -258,9 +258,9 @@ $totalSuccessLogins = (int)$loginSuccessStmt->fetchColumn();
       justify-content:center;
       padding:10px 14px;
       border-radius:12px;
-      border:1px solid rgba(148,163,184,.25);
+      border:1px solid rgba(61,67,55,.25);
       background:rgba(255,255,255,.05);
-      color:#cbd5e1;
+      color:#C7CBB8;
       font-weight:800;
       text-decoration:none;
       cursor:pointer;
@@ -280,7 +280,7 @@ $totalSuccessLogins = (int)$loginSuccessStmt->fetchColumn();
   </style>
 </head>
 <body>
-<?php require __DIR__ . '/partials/sidebar.php'; ?>
+<?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
 
 <main class="container">
   <section class="panel">

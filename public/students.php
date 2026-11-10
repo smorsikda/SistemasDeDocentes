@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
-require __DIR__ . '/../app/helpers/csrf.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
+require __DIR__ . '/../backend/helpers/csrf.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -148,7 +148,7 @@ function organizationTypeLabel($v){
 <head>
   <meta charset="utf-8">
   <title>Estudiantes</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     .container{
       padding:26px;
@@ -192,9 +192,9 @@ function organizationTypeLabel($v){
       justify-content:center;
       padding:10px 14px;
       border-radius:14px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.10);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.10);
+      color:var(--accent);
       font-weight:800;
       text-decoration:none;
     }
@@ -218,9 +218,9 @@ function organizationTypeLabel($v){
       justify-content:center;
       padding:8px 12px;
       border-radius:12px;
-      border:1px solid rgba(47,191,113,.35);
-      background:rgba(47,191,113,.12);
-      color:var(--green);
+      border:1px solid rgba(107,127,103,.35);
+      background:rgba(107,127,103,.12);
+      color:var(--accent);
       font-weight:700;
       text-decoration:none;
     }
@@ -267,7 +267,7 @@ function organizationTypeLabel($v){
       border:1px solid var(--line);
     }
 
-    .notice.success{color:#b7f7d2;background:rgba(34,197,94,.12)}
+    .notice.success{color:#b7f7d2;background:rgba(107,127,103,.12)}
     .notice.error{color:#fecaca;background:rgba(239,68,68,.12)}
 
     .muted{
@@ -298,7 +298,7 @@ function organizationTypeLabel($v){
       border-radius:999px;
       background:rgba(255,255,255,.05);
       border:1px solid var(--line);
-      color:#e5e7eb;
+      color:#C7CBB8;
       font-size:13px;
       font-weight:700;
     }
@@ -309,13 +309,13 @@ function organizationTypeLabel($v){
       border-radius:999px;
       border:1px solid var(--line);
       font-size:12px;
-      color:#e5e7eb;
+      color:#C7CBB8;
       background:rgba(255,255,255,.04);
     }
   </style>
 </head>
 <body>
-<?php require __DIR__ . '/partials/sidebar.php'; ?>
+<?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
 
 <main class="container">
   <section class="panel">
@@ -447,7 +447,7 @@ function organizationTypeLabel($v){
               </td>
 
               <td>
-                <div style="font-weight:800; color:#e5e7eb;"><?= h($r['full_name']) ?></div>
+                <div style="font-weight:800; color:#C7CBB8;"><?= h($r['full_name']) ?></div>
                 <div class="small"><?= h($r['school_name'] ?: '—') ?></div>
                 <?php if (!empty($r['profession'])): ?>
                   <div class="small">Profesión: <?= h($r['profession']) ?></div>

@@ -31,6 +31,14 @@ $options = [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ];
 
+$sslSetting = getenv('DOCENTES_DB_SSL');
+$sslEnabled = filter_var($sslSetting === false ? 'false' : $sslSetting, FILTER_VALIDATE_BOOLEAN);
+if ($sslEnabled) {
+    $sslCa = getenv('DOCENTES_DB_SSL_CA') ?: '/etc/ssl/certs/ca-certificates.crt';
+    $options[PDO::MYSQL_ATTR_SSL_CA] = $sslCa;
+    $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = true;
+}
+
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (PDOException $e) {

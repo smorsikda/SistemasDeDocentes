@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Acceso denegado</title>
 
-<link rel="stylesheet" href="/docentes/assets/css/app.css">
+<link rel="stylesheet" href="/docentes/frontend/css/app.css">
 
 <style>
 body{
@@ -12,13 +12,14 @@ display:flex;
 align-items:center;
 justify-content:center;
 height:100vh;
-background:#0f172a;
-color:white;
+background:var(--bg);
+color:var(--text);
 font-family:sans-serif;
 }
 
 .card{
-background:#111827;
+background:linear-gradient(145deg,var(--card2),var(--card));
+border:1px solid var(--line);
 padding:40px;
 border-radius:18px;
 text-align:center;
@@ -32,15 +33,15 @@ margin-bottom:10px;
 }
 
 p{
-color:#9ca3af;
+color:var(--muted);
 margin-bottom:20px;
 }
 
 a{
 display:inline-block;
 padding:10px 16px;
-background:#22c55e;
-color:#052e16;
+background:linear-gradient(180deg,var(--accent),var(--accent-dark));
+color:var(--bg);
 font-weight:700;
 border-radius:10px;
 text-decoration:none;
@@ -52,7 +53,7 @@ text-decoration:none;
 
 <div class="card">
 
-<img src="/docentes/assets/images/1.png" width="60">
+<img src="/docentes/frontend/images/1.png" width="60">
 
 <h1>No tienes acceso</h1>
 

@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../backend/middleware/auth.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -12,7 +12,7 @@ function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 <head>
   <meta charset="utf-8">
   <title>Guía rápida</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     .app{min-height:100vh;display:flex;flex-direction:column}
     .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;background:rgba(0,0,0,.35);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
@@ -44,13 +44,13 @@ function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
       font-size:12px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
-    .btnS{display:inline-block;padding:10px 14px;border-radius:14px;border:1px solid rgba(47,191,113,.35);background:rgba(47,191,113,.10);color:var(--green);font-weight:800}
+    .btnS{display:inline-block;padding:10px 14px;border-radius:14px;border:1px solid rgba(107,127,103,.35);background:rgba(107,127,103,.10);color:var(--accent);font-weight:800}
     ul{margin:10px 0 0 18px;color:var(--muted)}
     li{margin:6px 0}
   </style>
 </head>
 <body>
-  <?php require __DIR__ . '/partials/sidebar.php'; ?>
+  <?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
     </header>
 
     <main class="container">

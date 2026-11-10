@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
-require __DIR__ . '/../app/helpers/csrf.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
+require __DIR__ . '/../backend/helpers/csrf.php';
 
 
 requireLogin();
@@ -580,7 +580,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'impor
 <head>
   <meta charset="utf-8">
   <title>Importar estudiantes CSV</title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     .container{padding:26px;max-width:1380px;width:100%;margin:0 auto;}
     .panel{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
@@ -588,19 +588,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'impor
     .muted{color:var(--muted);}
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
     .btnS,.btnG,.btn2{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:12px;font-weight:800;text-decoration:none;cursor:pointer;}
-    .btnS{border:1px solid rgba(47,191,113,.35);background:rgba(47,191,113,.10);color:var(--green);}
-    .btnG{border:1px solid rgba(148,163,184,.25);background:rgba(255,255,255,.05);color:#cbd5e1;}
-    .btn2{background:linear-gradient(180deg,var(--green),var(--green2));color:#06110a;border:none;}
+    .btnS{border:1px solid rgba(107,127,103,.35);background:rgba(107,127,103,.10);color:var(--accent);}
+    .btnG{border:1px solid rgba(61,67,55,.25);background:rgba(255,255,255,.05);color:#C7CBB8;}
+    .btn2{background:linear-gradient(180deg,var(--accent),var(--accent-dark));color:#06110a;border:none;}
     .alert{margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(255,90,95,.10);border:1px solid rgba(255,90,95,.35);color:#fff;}
-    .ok-msg{margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(47,191,113,.10);border:1px solid rgba(47,191,113,.35);color:var(--green);font-weight:700;}
-    .note-box{margin-top:14px;padding:14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:#e5e7eb;line-height:1.7;}
+    .ok-msg{margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(107,127,103,.10);border:1px solid rgba(107,127,103,.35);color:var(--accent);font-weight:700;}
+    .note-box{margin-top:14px;padding:14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:#C7CBB8;line-height:1.7;}
     .table-wrap{overflow-x:auto;margin-top:16px;}
     table{width:100%;min-width:1100px;border-collapse:collapse;}
     th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top;}
     th{color:var(--muted);background:rgba(255,255,255,.04);white-space:nowrap;}
     tr:hover{background:rgba(255,255,255,.04);}
     .pill{display:inline-flex;align-items:center;justify-content:center;min-width:72px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;font-weight:800;}
-    .pill.ok{border-color:rgba(34,197,94,.35);color:#22c55e;background:rgba(34,197,94,.10);}
+    .pill.ok{border-color:rgba(107,127,103,.35);color:#6B7F67;background:rgba(107,127,103,.10);}
     .pill.bad{border-color:rgba(239,68,68,.35);color:#fca5a5;background:rgba(239,68,68,.10);}
     .small{font-size:12px;color:var(--muted);}
     .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;}
@@ -608,7 +608,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'impor
   </style>
 </head>
 <body>
-<?php require __DIR__ . '/partials/sidebar.php'; ?>
+<?php require __DIR__ . '/../frontend/partials/sidebar.php'; ?>
 
 <main class="container">
   <section class="panel">

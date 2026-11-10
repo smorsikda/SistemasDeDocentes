@@ -1,0 +1,10 @@
+.git
+.github
+.env
+.env.*
+!.env.example
+.DS_Store
+app/config/db.local.php
+alert students.txt
+municipios alert.txt
+public/test_db.php

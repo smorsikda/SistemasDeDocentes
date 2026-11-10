@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/../app/config/db.php';
-require __DIR__ . '/../app/middleware/auth.php';
+require __DIR__ . '/../backend/config/db.php';
+require __DIR__ . '/../backend/middleware/auth.php';
 
 requireLogin();
 requirePasswordChangeIfNeeded();
@@ -87,7 +87,7 @@ $today_human = date('d/m/Y');
 <head>
   <meta charset="utf-8">
   <title>Constancia - <?= h($s['full_name']) ?></title>
-  <link rel="stylesheet" href="/docentes/assets/css/app.css">
+  <link rel="stylesheet" href="/docentes/frontend/css/app.css">
   <style>
     :root{
       --paper:#ffffff;
@@ -97,7 +97,7 @@ $today_human = date('d/m/Y');
     }
 
     body{
-      background:#0b1220;
+      background:#0F1F17;
       margin:0;
     }
 
@@ -105,6 +105,8 @@ $today_human = date('d/m/Y');
       max-width:900px;
       margin:24px auto;
       padding:18px;
+      min-height:0;
+      display:block;
     }
 
     .paper{
@@ -222,28 +224,64 @@ $today_human = date('d/m/Y');
       display:flex;
       gap:10px;
       justify-content:flex-end;
+      align-items:center;
       padding:14px 26px;
-      background:#0b1220;
+      background:#0F1F17;
+      border-radius:14px 14px 0 0;
     }
 
     .btnPrint{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex:0 0 auto;
+      width:auto;
+      min-height:44px;
+      margin:0;
       padding:10px 14px;
       border-radius:12px;
-      border:1px solid rgba(47,191,113,.5);
-      background:rgba(47,191,113,.12);
-      color:#d1fae5;
+      border:1px solid rgba(107,127,103,.5);
+      background:rgba(107,127,103,.12);
+      color:#C7CBB8;
       font-weight:800;
+      font:inherit;
+      font-weight:800;
+      white-space:nowrap;
       cursor:pointer;
+      transition:background .18s ease, border-color .18s ease, transform .18s ease;
     }
 
     .btnBack{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex:0 0 auto;
+      min-height:44px;
       padding:10px 14px;
       border-radius:12px;
-      border:1px solid rgba(148,163,184,.35);
+      border:1px solid rgba(61,67,55,.35);
       background:rgba(255,255,255,.06);
-      color:#e5e7eb;
+      color:#C7CBB8;
       font-weight:800;
       text-decoration:none;
+      white-space:nowrap;
+      transition:background .18s ease, border-color .18s ease, transform .18s ease;
+    }
+
+    .btnPrint:hover,.btnBack:hover{
+      background:rgba(107,127,103,.24);
+      border-color:rgba(199,203,184,.45);
+      transform:translateY(-1px);
+    }
+
+    .btnPrint:focus-visible,.btnBack:focus-visible{
+      outline:3px solid #C7CBB8;
+      outline-offset:3px;
+    }
+
+    @media(max-width:520px){
+      .actions{padding:12px;gap:8px;}
+      .btnPrint,.btnBack{padding:10px 12px;font-size:14px;}
     }
 
     @media print{
@@ -273,12 +311,12 @@ $today_human = date('d/m/Y');
 <div class="wrap">
   <div class="actions">
     <a class="btnBack" href="students.php">← Volver</a>
-    <button class="btnPrint" onclick="window.print()">Imprimir / Guardar PDF</button>
+    <button class="btnPrint" type="button" onclick="window.print()">Imprimir / Guardar PDF</button>
   </div>
 
   <section class="paper">
     <div class="top">
-      <img src="/docentes/assets/images/1.png" alt="CONATRADEC">
+      <img src="/docentes/frontend/images/1.png" alt="CONATRADEC">
       <div>
         <h1>CONATRADEC</h1>
         <div class="sub">Registro Académico • Constancia</div>

@@ -1,17 +1,20 @@
 :root{
-  --bg: #0b1210;            /* fondo oscuro elegante */
-  --card: rgba(255,255,255,.06);
-  --card2: rgba(255,255,255,.08);
-  --line: rgba(255,255,255,.12);
-  --text: rgba(255,255,255,.92);
-  --muted: rgba(255,255,255,.65);
+  --bg: #0F1F17;
+  --card: rgba(30,58,46,.72);
+  --card2: rgba(30,58,46,.92);
+  --line: rgba(62,90,63,.72);
+  --text: #C7CBB8;
+  --muted: rgba(199,203,184,.68);
+  --surface-strong: #3D4337;
 
-  --green: #2fbf71;         /* verde principal */
-  --green2: #1f8a52;        /* verde oscuro */
+  --accent: #6B7F67;
+  --accent-dark: #3E5A3F;
+  --green: var(--accent);
+  --green2: var(--accent-dark);
   --danger: #ff5a5f;
 
   --radius: 18px;
-  --shadow: 0 18px 50px rgba(0,0,0,.45);
+  --shadow: 0 18px 50px rgba(0,0,0,.55);
 }
 
 *{box-sizing:border-box}
@@ -21,12 +24,12 @@ body{
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
   color: var(--text);
   background:
-    radial-gradient(1000px 500px at 20% 0%, rgba(47,191,113,.25), transparent 55%),
-    radial-gradient(900px 450px at 85% 15%, rgba(31,138,82,.18), transparent 60%),
+    radial-gradient(1000px 520px at 16% -10%, rgba(62,90,63,.28), transparent 58%),
+    radial-gradient(900px 480px at 95% 5%, rgba(107,127,103,.15), transparent 62%),
     var(--bg);
 }
 
-a{color: var(--green); text-decoration:none}
+a{color: var(--accent); text-decoration:none}
 a:hover{opacity:.9}
 
 .wrap{
@@ -56,8 +59,8 @@ a:hover{opacity:.9}
 .brand img{
   width:44px; height:44px; object-fit:contain;
   border-radius: 12px;
-  background: rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.24);
+  border:1px solid var(--line);
   padding:6px;
 }
 .brand .title{
@@ -93,8 +96,8 @@ input, select, textarea{
   outline:none;
 }
 input:focus, select:focus, textarea:focus{
-  border-color: rgba(47,191,113,.55);
-  box-shadow: 0 0 0 4px rgba(47,191,113,.12);
+  border-color: rgba(107,127,103,.75);
+  box-shadow: 0 0 0 4px rgba(107,127,103,.18);
 }
 
 .btn{
@@ -103,8 +106,8 @@ input:focus, select:focus, textarea:focus{
   padding: 12px 14px;
   border:0;
   border-radius: 14px;
-  background: linear-gradient(180deg, var(--green), var(--green2));
-  color: #0b1210;
+  background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+  color: #0F1F17;
   font-weight: 700;
   cursor:pointer;
 }
@@ -117,7 +120,7 @@ input:focus, select:focus, textarea:focus{
   border-radius: 14px;
   border:1px solid rgba(255,90,95,.35);
   background: rgba(255,90,95,.10);
-  color: rgba(255,255,255,.9);
+  color: rgba(199,203,184,.9);
   font-size: 13px;
 }
 
@@ -129,15 +132,6 @@ input:focus, select:focus, textarea:focus{
   color: var(--muted);
 }
 .small{font-size:12px;color:var(--muted)}
-
-
-
-
-
-
-
-
-
 
 
 
@@ -180,7 +174,7 @@ input:focus, select:focus, textarea:focus{
 
 .user a{
   margin-left:14px;
-  color:var(--green);
+  color:var(--accent);
 }
 
 .container{
@@ -206,9 +200,9 @@ input:focus, select:focus, textarea:focus{
   display:inline-block;
   padding:8px 14px;
   border-radius:12px;
-  background:rgba(47,191,113,.15);
-  border:1px solid rgba(47,191,113,.3);
-  color:var(--green);
+  background:rgba(107,127,103,.16);
+  border:1px solid rgba(107,127,103,.42);
+  color:var(--accent);
   font-size:14px;
 }
 
@@ -224,7 +218,7 @@ table{
 th{
   text-align:left;
   padding:12px;
-  background:rgba(255,255,255,.06);
+  background:rgba(61,67,55,.45);
   color:var(--muted);
   border-bottom:1px solid var(--line);
 }
@@ -235,29 +229,23 @@ td{
 }
 
 tr:hover{
-  background:rgba(255,255,255,.04);
+  background:rgba(255,255,255,.025);
 }
 
 /* ===== Fix dropdown options (Windows/Chrome) ===== */
 select{
-  background-color: rgba(255,255,255,.06); /* tu estilo */
-  color: #e5e7eb;
+  background-color: #0F1F17;
+  color: #C7CBB8;
 }
 
 /* La lista desplegable */
 select option{
-  background-color: #0b1220;  /* oscuro real */
-  color: #e5e7eb;             /* texto claro */
+  background-color: #0F1F17;
+  color: #C7CBB8;
 }
 
 /* Para opciones seleccionadas (algunos navegadores) */
 select option:checked{
-  background-color: #111827;
-  color: #e5e7eb;
+  background-color: #3D4337;
+  color: #C7CBB8;
 }
-
-
-
-
-
-
