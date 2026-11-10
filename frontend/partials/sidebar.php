@@ -325,6 +325,10 @@ function sidebarIcon(string $name): string {
             <span class="nav-icon"><?= sidebarIcon('teachers') ?></span>
             <span class="nav-label">Docentes</span>
           </a>
+          <a class="side-link <?= isActive('user_roles.php', $current) ?>" href="user_roles.php">
+            <span class="nav-icon"><?= sidebarIcon('teachers') ?></span>
+            <span class="nav-label">Administrar roles</span>
+          </a>
         <?php endif; ?>
 
         <a class="side-link <?= isActive('students_historical.php', $current) ?>" href="students_historical.php">
