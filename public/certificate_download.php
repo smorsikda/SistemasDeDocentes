@@ -267,17 +267,60 @@ if ($schoolName === '') {
       font-size:13px;
     }
 
+    @page{
+      size:letter landscape;
+      margin:0.35in 0.25in;
+    }
+
     @media print{
+      html,body{ width:100%; height:100%; }
       body{ background:#fff; padding:0; }
       .actions{ display:none !important; }
       .page{
         box-shadow:none;
         max-width:none;
         width:100%;
-        min-height:auto;
-        border:8px solid var(--gold-soft);
+        height:7.8in;
+        min-height:0;
+        margin:0;
+        border:6px solid var(--gold-soft);
+        break-inside:avoid;
+        page-break-inside:avoid;
       }
-      .frame{ min-height:auto; }
+      .frame{
+        height:calc(100% - 24px);
+        min-height:0;
+        margin:12px;
+        padding:18px 32px;
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
+        break-inside:avoid;
+        page-break-inside:avoid;
+      }
+      .logo-gob,.logo-cona{max-width:180px;max-height:56px;}
+      .logo-snpcc{max-width:150px;max-height:54px;}
+      .top{gap:12px;padding-bottom:4px;}
+      .cert-number{font-size:11px;margin-top:6px;}
+      .title{margin-top:12px;}
+      .title h2{font-size:36px;}
+      .title h4{font-size:14px;margin-top:6px;}
+      .body{margin-top:16px;padding:0 18px;}
+      .body p{font-size:17px;line-height:1.4;margin-bottom:12px;}
+      .student-name{font-size:32px;margin:14px 0 12px;padding:10px;}
+      .signature{
+        margin:16px auto 0;
+        break-inside:avoid;
+        page-break-inside:avoid;
+      }
+      .signature-image-wrap{height:54px;margin-bottom:3px;}
+      .signature-image{max-height:54px;}
+      .signature .line{font-size:11px;margin-bottom:4px;padding-top:6px;}
+      .signature div:not(.signature-image-wrap):not(.line){font-size:12px;}
+      .page,.frame,.top,.cert-number,.title,.body,.signature{
+        break-after:avoid-page;
+        page-break-after:avoid;
+      }
     }
   </style>
 </head>
