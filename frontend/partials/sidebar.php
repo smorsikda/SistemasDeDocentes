@@ -31,6 +31,8 @@ function sidebarIcon(string $name): string {
   .layout{
     min-height:100vh;
     display:flex;
+    width:100%;
+    min-width:0;
   }
 
   .sidebar{
@@ -223,6 +225,10 @@ function sidebarIcon(string $name): string {
     min-width:0;
   }
 
+  .sidebar-backdrop{
+    display:none;
+  }
+
   .mobile-topbar{
     display:none;
     align-items:center;
@@ -248,14 +254,25 @@ function sidebarIcon(string $name): string {
   }
 
   @media (max-width: 960px){
+    .layout{
+      display:block;
+      min-height:100vh;
+      overflow-x:clip;
+    }
+
     .sidebar{
       position:fixed;
       left:0;
       top:0;
-      z-index:50;
-      transform:translateX(-100%);
-      width:280px;
+      bottom:0;
+      z-index:100;
+      transform:translateX(-105%);
+      width:min(280px, calc(100vw - 48px));
+      height:100vh;
+      height:100dvh;
+      max-height:100vh;
       box-shadow:0 18px 40px rgba(0,0,0,.35);
+      overscroll-behavior:contain;
     }
 
     .sidebar.open{
@@ -263,7 +280,7 @@ function sidebarIcon(string $name): string {
     }
 
     .sidebar.collapsed{
-      width:280px;
+      width:min(280px, calc(100vw - 48px));
     }
 
     .sidebar.collapsed .brand-text,
@@ -275,6 +292,51 @@ function sidebarIcon(string $name): string {
 
     .mobile-topbar{
       display:flex;
+      position:sticky;
+      top:0;
+      z-index:20;
+    }
+
+    .sidebar-backdrop{
+      position:fixed;
+      inset:0;
+      z-index:99;
+      width:100%;
+      height:100%;
+      padding:0;
+      border:0;
+      background:rgba(0,0,0,.58);
+      backdrop-filter:blur(2px);
+      cursor:pointer;
+    }
+
+    .sidebar.open + .sidebar-backdrop{
+      display:block;
+    }
+
+    .content-area{
+      width:100%;
+      min-width:0;
+    }
+
+    .content-area > main{
+      min-width:0;
+      width:100%;
+    }
+  }
+
+  @media (max-width: 640px){
+    .mobile-topbar{
+      padding:10px 12px;
+    }
+
+    .content-area > main.container{
+      max-width:100%;
+      padding:16px 12px;
+    }
+
+    .content-area .panel{
+      padding:14px;
     }
   }
 </style>
@@ -374,6 +436,8 @@ function sidebarIcon(string $name): string {
       <div class="user-role">Rol: <?= h($me['role'] ?? '—') ?></div>
     </div>
   </aside>
+
+  <button class="sidebar-backdrop" type="button" onclick="toggleSidebar()" aria-label="Cerrar menú"></button>
 
   <div class="content-area">
     <div class="mobile-topbar">
